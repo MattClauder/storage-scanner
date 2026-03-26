@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Self-Storage Acquisition Scanner</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { margin: 0; background: #f9fafb; }
+    .loader { display:flex; align-items:center; justify-content:center; height:100vh; font-family:system-ui; color:#6b7280; }
+  </style>
+</head>
+<body>
+  <div id="root"><div class="loader">Loading dashboard...</div></div>
+
+  <script type="text/babel">
+const { useState, useMemo } = React;
+
+const SCAN_DATE = "2026-03-26";
+
+const initialProperties = [
+  {
+    id: 1, address: "2601 Willowbrook Rd", city: "Dallas", state: "TX", zip: "75220", zone: "Dallas",
+    price: 3630000, units: 280, sqft: null, capRate: null, facilityType: "Enclosed (Non-AC)",
+    occupancy: null, operator: "US Storage Centers / Macho Storage", source: "Crexi / Broker",
+    sourceUrl: "https://www.crexi.com/properties/TX/Dallas/Self-Storage",
+    status: "STRONG", ddStatus: "Not Started", isNew: false,
+    notes: "280 units, potential value-add. Confirm current asking price and financials."
+  },
+  {
+    id: 2, address: "Dallas County (undisclosed)", city: "Dallas", state: "TX", zip: "", zone: "Dallas",
+    price: 3000000, units: 258, sqft: null, capRate: 6.11, facilityType: "Enclosed",
+    occupancy: null, operator: "Private Seller", source: "Broker / Off-market", sourceUrl: null,
+    status: "STRONG", ddStatus: "Financials Requested", isNew: false,
+    notes: "Seller financing available. 6.11% cap rate. Strong deal if numbers verify."
+  },
+  {
+    id: 3, address: "Undisclosed (Two-Building)", city: "Dallas", state: "TX", zip: "", zone: "Dallas",
+    price: 1800000, units: null, sqft: null, capRate: null, facilityType: "Enclosed",
+    occupancy: "94-100%", operator: "Private Seller", source: "Crexi",
+    sourceUrl: "https://www.crexi.com/properties/TX/Dallas/Self-Storage",
+    status: "STRONG", ddStatus: "Financials Requested", isNew: false,
+    notes: "CRITICAL priority. Two buildings, 94-100% occupancy avg. Best price-to-performance in pipeline."
+  },
+  {
+    id: 4, address: "3818 N Town East Blvd + 12504 Quail Dr", city: "Mesquite / Balch Springs", state: "TX", zip: "75150", zone: "Dallas",
+    price: 3600000, units: 273, sqft: null, capRate: null, facilityType: "Enclosed (Non-AC)",
+    occupancy: null, operator: "Private Seller", source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/Listing/Self-Storage-Portfolio/25786169/",
+    status: "DD REVIEWED", ddStatus: "Overpriced", isNew: false,
+    notes: "DD reviewed â overpriced at $3.6M. Fair value est. $2.2-2.8M. 200 units Mesquite + 73 units Balch Springs."
+  },
+  {
+    id: 5, address: "2339 Inwood Rd", city: "Dallas", state: "TX", zip: "75235", zone: "Dallas",
+    price: null, units: null, sqft: 31460, capRate: null, facilityType: "Self-Storage",
+    occupancy: null, operator: "Unknown", source: "LoopNet / CityFeet",
+    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/dallas-tx/for-sale/",
+    status: "TRACKING", ddStatus: "Not Started", isNew: false,
+    notes: "31,460 SF, price upon request. Need to get pricing details."
+  },
+  {
+    id: 6, address: "Deep Ellum / Downtown Dallas", city: "Dallas", state: "TX", zip: "75226", zone: "Dallas",
+    price: null, units: null, sqft: null, capRate: null, facilityType: "Self-Storage / Covered Land Play",
+    occupancy: null, operator: "Edward Holman", source: "TXSSA",
+    sourceUrl: "https://community.txssa.org/communities/community-home?CommunityKey=08a250fb-7d36-4ee6-ba57-f3216b1c2aba",
+    status: "TRACKING", ddStatus: "Not Started", isNew: false,
+    notes: "TXSSA forum listing. Deep Ellum entertainment district. 'Covered land play' â may be redevelopment angle."
+  },
+  {
+    id: 7, address: "14531 FM 529", city: "Houston", state: "TX", zip: "77084", zone: "Houston",
+    price: null, units: null, sqft: 53610, capRate: null, facilityType: "Self-Storage",
+    occupancy: null, operator: "Direct Equity", source: "LoopNet / CityFeet",
+    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/houston-tx/for-sale/",
+    status: "TRACKING", ddStatus: "Not Started", isNew: false,
+    notes: "53,610 SF specialty facility. Price upon request. Large footprint â need pricing to evaluate."
+  },
+  {
+    id: 8, address: "309 W Archer Rd", city: "Baytown", state: "TX", zip: "77521", zone: "Houston",
+    price: 2200000, units: null, sqft: null, capRate: 6.41, facilityType: "Self-Storage",
+    occupancy: null, operator: "Unknown", source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/harris-county-tx/for-sale/",
+    status: "TRACKING", ddStatus: "Not Started", isNew: false,
+    notes: "$2.2M, 6.41% cap rate. In budget. Baytown is outer Houston zone â verify enclosed type."
+  },
+  {
+    id: 9, address: "11101 Ella Blvd", city: "Houston", state: "TX", zip: "", zone: "Houston",
+    price: null, units: null, sqft: 77000, capRate: null, facilityType: "Logistics & Storage",
+    occupancy: null, operator: "Unknown", source: "Broker", sourceUrl: null,
+    status: "TRACKING", ddStatus: "Not Started", isNew: false,
+    notes: "77,000 SF logistics & storage. May not be pure self-storage â verify facility type."
+  },
+  {
+    id: 10, address: "15608 S Brentwood St", city: "Channelview", state: "TX", zip: "", zone: "Houston",
+    price: null, units: null, sqft: null, capRate: null, facilityType: "RV & Boat Storage",
+    occupancy: null, operator: "Unknown", source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/harris-county-tx/for-sale/",
+    status: "TRACKING", ddStatus: "Not Started", isNew: false,
+    notes: "RV & Boat storage â does NOT meet enclosed criteria. Low priority unless mixed-use."
+  },
+  {
+    id: 11, address: "14013 Huffmeister Rd", city: "Cypress", state: "TX", zip: "", zone: "Houston",
+    price: null, units: null, sqft: null, capRate: null, facilityType: "Contractor Storage",
+    occupancy: null, operator: "Unknown", source: "Broker", sourceUrl: null,
+    status: "TRACKING", ddStatus: "Not Started", isNew: false,
+    notes: "Contractor storage â likely not enclosed self-storage. Low priority."
+  },
+  {
+    id: 12, address: "North Houston 3-Property Group", city: "Houston (North)", state: "TX", zip: "", zone: "Houston",
+    price: null, units: null, sqft: null, capRate: null, facilityType: "Self-Storage Portfolio",
+    occupancy: null, operator: "Adam Schober", source: "TXSSA",
+    sourceUrl: "https://community.txssa.org/communities/community-home?CommunityKey=08a250fb-7d36-4ee6-ba57-f3216b1c2aba",
+    status: "TRACKING", ddStatus: "Not Started", isNew: false,
+    notes: "3-property group north of Houston. Contact: (903) 941-3655. Need details on type, pricing."
+  },
+  {
+    id: 13, address: "20717 Westheimer Pky", city: "Katy", state: "TX", zip: "77450", zone: "Houston",
+    price: 449000, units: null, sqft: 72200, capRate: null, facilityType: "Self-Storage",
+    occupancy: null, operator: "Unknown", source: "LoopNet / CityFeet",
+    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/houston-tx/for-sale/",
+    status: "TRACKING", ddStatus: "Not Started", isNew: false,
+    notes: "$449K â well under budget. 72,200 SF lot but unclear how much is enclosed storage. Investigate."
+  },
+  {
+    id: 14, address: "522 Crenshaw Rd", city: "Pasadena", state: "TX", zip: "77504", zone: "Houston",
+    price: null, units: null, sqft: 28200, capRate: null, facilityType: "Self-Storage",
+    occupancy: null, operator: "Crenshaw Self Storage", source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/harris-county-tx/for-sale/",
+    status: "NEW", ddStatus: "Not Started", isNew: true,
+    notes: "28,200 SF self-storage in Pasadena. Price upon request. Need to verify if enclosed and get pricing."
+  },
+  {
+    id: 15, address: "2319-2323 Preston Ave", city: "Pasadena", state: "TX", zip: "77503", zone: "Houston",
+    price: null, units: null, sqft: 29724, capRate: null, facilityType: "Self-Storage",
+    occupancy: null, operator: "Unknown", source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/Listing/17614186/2323-PRESTON-Pasadena-TX/",
+    status: "NEW", ddStatus: "Not Started", isNew: true,
+    notes: "29,724 SF self-storage with fenced yard, trailer parking, electricity. Price upon request. Verify enclosed units."
+  },
+  {
+    id: 16, address: "3020 Duncanville Rd", city: "Dallas", state: "TX", zip: "75211", zone: "Dallas",
+    price: null, units: 172, sqft: 19649, capRate: null, facilityType: "Enclosed (Non-AC)",
+    occupancy: "35-38%", operator: "Insure Self Storage", source: "LoopNet / Showcase",
+    sourceUrl: "https://www.loopnet.com/Listing/3020-Duncanville-Rd-Dallas-TX/35554099/",
+    status: "NEW", ddStatus: "Not Started", isNew: true,
+    notes: "172 enclosed units, 19,649 SF. Only 35-38% occupied â major value-add if priced right. Price upon request. GET PRICING ASAP."
+  },
+  {
+    id: 17, address: "Dallas (75253 area)", city: "Dallas", state: "TX", zip: "75253", zone: "Dallas",
+    price: null, units: null, sqft: 13112, capRate: null, facilityType: "Self-Storage",
+    occupancy: null, operator: "Unknown", source: "CityFeet",
+    sourceUrl: "https://www.cityfeet.com/cont/dallas-tx/storage-facilities-for-sale",
+    status: "NEW", ddStatus: "Not Started", isNew: true,
+    notes: "13,112 SF self-storage in southeast Dallas (75253). Price upon request. Small facility â get address and details."
+  },
+  {
+    id: 18, address: "16100 Firetower Rd", city: "Conroe", state: "TX", zip: "77306", zone: "Houston",
+    price: 349900, units: null, sqft: 5000, capRate: null, facilityType: "Self-Storage",
+    occupancy: null, operator: "Allstate", source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/conroe-tx/for-sale/",
+    status: "NEW", ddStatus: "Not Started", isNew: true,
+    notes: "$349,900, only 5,000 SF â very small. In Conroe corridor target zone. Likely too small for criteria but worth noting."
+  },
+];
+
+const DD_STATUSES = ["Not Started", "Pending", "In Progress", "Financials Requested", "Complete", "Overpriced"];
+const PROPERTY_STATUSES = ["NEW", "STRONG", "TRACKING", "DD REVIEWED"];
+
+function formatPrice(price) {
+  if (!price) return "Price Upon Request";
+  if (price >= 1000000) return "$" + (price / 1000000).toFixed(price % 1000000 === 0 ? 0 : 2) + "M";
+  return "$" + price.toLocaleString();
+}
+
+function formatSqft(sqft) {
+  if (!sqft) return "";
+  return sqft.toLocaleString() + " SF";
+}
+
+function StatusBadge({ status }) {
+  const colors = {
+    "STRONG": "bg-green-100 text-green-800 border-green-300",
+    "NEW": "bg-blue-100 text-blue-800 border-blue-300",
+    "TRACKING": "bg-yellow-100 text-yellow-800 border-yellow-300",
+    "DD REVIEWED": "bg-purple-100 text-purple-800 border-purple-300",
+  };
+  return (
+    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold border ${colors[status] || "bg-gray-100 text-gray-700 border-gray-300"}`}>
+      {status}
+    </span>
+  );
+}
+
+function DDStatusDropdown({ value, onChange }) {
+  const colors = {
+    "Not Started": "bg-gray-50 text-gray-600 border-gray-300",
+    "Pending": "bg-yellow-50 text-yellow-700 border-yellow-300",
+    "In Progress": "bg-blue-50 text-blue-700 border-blue-300",
+    "Financials Requested": "bg-orange-50 text-orange-700 border-orange-300",
+    "Complete": "bg-green-50 text-green-700 border-green-300",
+    "Overpriced": "bg-red-50 text-red-700 border-red-300",
+  };
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className={`text-xs font-medium rounded px-2 py-1 border cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-400 ${colors[value] || ""}`}
+    >
+      {DD_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+    </select>
+  );
+}
+
+function StorageDashboard() {
+  const [properties, setProperties] = useState(initialProperties);
+  const [zoneFilter, setZoneFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [sortBy, setSortBy] = useState("status");
+  const [expandedId, setExpandedId] = useState(null);
+
+  const updateDDStatus = (id, newStatus) => {
+    setProperties(prev => prev.map(p => p.id === id ? { ...p, ddStatus: newStatus } : p));
+  };
+
+  const statusOrder = { "STRONG": 0, "NEW": 1, "TRACKING": 2, "DD REVIEWED": 3 };
+
+  const filtered = useMemo(() => {
+    let result = [...properties];
+    if (zoneFilter !== "All") result = result.filter(p => p.zone === zoneFilter);
+    if (statusFilter !== "All") result = result.filter(p => p.status === statusFilter);
+    result.sort((a, b) => {
+      if (sortBy === "status") return (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99);
+      if (sortBy === "price") return (a.price || Infinity) - (b.price || Infinity);
+      if (sortBy === "zone") return a.zone.localeCompare(b.zone);
+      if (sortBy === "sqft") return (b.sqft || 0) - (a.sqft || 0);
+      return 0;
+    });
+    return result;
+  }, [properties, zoneFilter, statusFilter, sortBy]);
+
+  const stats = useMemo(() => ({
+    total: properties.length,
+    newCount: properties.filter(p => p.isNew).length,
+    strong: properties.filter(p => p.status === "STRONG").length,
+    inBudget: properties.filter(p => p.price && p.price >= 1000000 && p.price <= 4000000).length,
+    houston: properties.filter(p => p.zone === "Houston").length,
+    dallas: properties.filter(p => p.zone === "Dallas").length,
+  }), [properties]);
+
+  const priorityActions = [
+    { priority: 1, action: "Request financials for $1.8M Dallas two-building facility (94-100% occupancy)", urgency: "CRITICAL" },
+    { priority: 2, action: "Get pricing on 3020 Duncanville Rd, Dallas \u2014 172 enclosed units at only 35% occupancy = massive value-add if priced under $2M", urgency: "HIGH" },
+    { priority: 3, action: "Request pricing for 522 Crenshaw Rd (28,200 SF) and 2319 Preston Ave (29,724 SF) in Pasadena \u2014 both new enclosed listings", urgency: "HIGH" },
+    { priority: 4, action: "Follow up on Dallas County 258 units ($3M, 6.11% cap) \u2014 verify seller financing terms and request P&L", urgency: "HIGH" },
+    { priority: 5, action: "Evaluate 2601 Willowbrook Rd ($3.63M, 280 units) \u2014 request rent roll and trailing-12 P&L", urgency: "MEDIUM" },
+    { priority: 6, action: "Investigate Dallas 75253 listing (13,112 SF) \u2014 identify address, get pricing details", urgency: "MEDIUM" },
+    { priority: 7, action: "Contact Adam Schober re: North Houston 3-Property Group \u2014 (903) 941-3655", urgency: "MEDIUM" },
+    { priority: 8, action: "Request pricing from Direct Equity for 14531 FM 529, Houston (53,610 SF)", urgency: "LOW" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-3 sm:p-6" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
+      {/* Header */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 mb-4">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold text-gray-900">Self-Storage Acquisition Scanner</h1>
+            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Scan date: {SCAN_DATE} &middot; Houston & Dallas Zones &middot; $1-4M &middot; Enclosed facilities</p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 border border-green-200 rounded-full px-3 py-1 text-xs font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+            Scan Complete
+          </span>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 mb-4">
+        {[
+          { label: "Total Tracked", value: stats.total, bg: "bg-white", color: "text-gray-900" },
+          { label: "New This Scan", value: stats.newCount, bg: "bg-blue-50 border-blue-200", color: "text-blue-700", prefix: "\ud83c\udd95 " },
+          { label: "Strong Leads", value: stats.strong, bg: "bg-green-50 border-green-200", color: "text-green-700" },
+          { label: "In Budget", value: stats.inBudget, bg: "bg-emerald-50 border-emerald-200", color: "text-emerald-700" },
+          { label: "Houston", value: stats.houston, bg: "bg-orange-50 border-orange-200", color: "text-orange-700" },
+          { label: "Dallas", value: stats.dallas, bg: "bg-purple-50 border-purple-200", color: "text-purple-700" },
+        ].map((stat, i) => (
+          <div key={i} className={`rounded-lg border p-3 text-center ${stat.bg}`}>
+            <div className={`text-xl sm:text-2xl font-bold ${stat.color}`}>{stat.prefix || ""}{stat.value}</div>
+            <div className="text-xs text-gray-500 mt-0.5">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Priority Actions */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 mb-4">
+        <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">Priority Actions This Week</h2>
+        <div className="space-y-2.5">
+          {priorityActions.map((item) => (
+            <div key={item.priority} className="flex items-start gap-3 text-sm">
+              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-gray-800 text-white text-xs flex items-center justify-center font-bold mt-0.5">
+                {item.priority}
+              </span>
+              <span className="flex-1 text-gray-700 leading-snug">{item.action}</span>
+              <span className={`flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${
+                item.urgency === "CRITICAL" ? "bg-red-100 text-red-700" :
+                item.urgency === "HIGH" ? "bg-orange-100 text-orange-700" :
+                item.urgency === "MEDIUM" ? "bg-yellow-100 text-yellow-700" :
+                "bg-gray-100 text-gray-500"
+              }`}>{item.urgency}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 mb-4">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Zone</span>
+            {["All", "Houston", "Dallas"].map(z => (
+              <button key={z} onClick={() => setZoneFilter(z)}
+                className={`px-2.5 py-1 text-xs rounded-full font-medium border transition-all ${
+                  zoneFilter === z ? "bg-gray-800 text-white border-gray-800 shadow-sm" : "bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-700"
+                }`}>{z}</button>
+            ))}
+          </div>
+          <span className="hidden sm:block w-px h-5 bg-gray-200" />
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Status</span>
+            {["All", ...PROPERTY_STATUSES].map(s => (
+              <button key={s} onClick={() => setStatusFilter(s)}
+                className={`px-2.5 py-1 text-xs rounded-full font-medium border transition-all ${
+                  statusFilter === s ? "bg-gray-800 text-white border-gray-800 shadow-sm" : "bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-700"
+                }`}>{s}</button>
+            ))}
+          </div>
+          <span className="hidden sm:block w-px h-5 bg-gray-200" />
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Sort</span>
+            <select value={sortBy} onChange={e => setSortBy(e.target.value)}
+              className="text-xs border border-gray-200 rounded-lg px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400">
+              <option value="status">Priority</option>
+              <option value="price">Price</option>
+              <option value="zone">Zone</option>
+              <option value="sqft">Size</option>
+            </select>
+          </div>
+          <div className="ml-auto text-xs text-gray-400">{filtered.length}/{properties.length}</div>
+        </div>
+      </div>
+
+      {/* Property Cards */}
+      <div className="space-y-2.5">
+        {filtered.map((p) => (
+          <div key={p.id}
+            className={`bg-white rounded-xl border shadow-sm overflow-hidden transition-all ${
+              p.isNew ? "border-blue-300 ring-1 ring-blue-100" : "border-gray-200"
+            }`}>
+            <div className="p-3 sm:p-4 cursor-pointer hover:bg-gray-50/50 transition-colors" onClick={() => setExpandedId(expandedId === p.id ? null : p.id)}>
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                    {p.isNew && <span className="text-sm" title="New this scan">{"\ud83c\udd95"}</span>}
+                    <StatusBadge status={p.status} />
+                    <span className="text-xs text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">{p.zone}</span>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 text-sm leading-tight">{p.address}</h3>
+                  <p className="text-xs text-gray-500">{p.city}, {p.state} {p.zip}</p>
+                </div>
+                <div className="text-right flex-shrink-0">
+                  <div className={`font-bold text-sm ${p.price ? "text-gray-900" : "text-gray-400 text-xs"}`}>{formatPrice(p.price)}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">
+                    {p.units ? <span>{p.units} units</span> : null}
+                    {p.units && p.sqft ? " \u00b7 " : ""}
+                    {p.sqft ? <span>{formatSqft(p.sqft)}</span> : null}
+                    {!p.units && !p.sqft ? <span className="text-gray-400">Details TBD</span> : null}
+                  </div>
+                  {p.capRate && <div className="text-xs text-green-600 font-semibold mt-0.5">{p.capRate}% Cap</div>}
+                </div>
+              </div>
+              <div className="flex items-center gap-2 mt-2 flex-wrap">
+                <span className="text-xs text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded">{p.facilityType}</span>
+                {p.occupancy && <span className="text-xs text-gray-500">Occ: {p.occupancy}</span>}
+                <span className="text-xs text-gray-400 italic">via {p.source}</span>
+                <div className="ml-auto" onClick={e => e.stopPropagation()}>
+                  <DDStatusDropdown value={p.ddStatus} onChange={(v) => updateDDStatus(p.id, v)} />
+                </div>
+              </div>
+            </div>
+
+            {expandedId === p.id && (
+              <div className="border-t border-gray-100 bg-gray-50 p-3 sm:p-4">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs mb-3">
+                  <div><span className="text-gray-400">Operator:</span> <span className="font-medium text-gray-700">{p.operator || "Unknown"}</span></div>
+                  <div><span className="text-gray-400">Type:</span> <span className="font-medium text-gray-700">{p.facilityType}</span></div>
+                  <div><span className="text-gray-400">Occupancy:</span> <span className="font-medium text-gray-700">{p.occupancy || "Unknown"}</span></div>
+                  <div><span className="text-gray-400">Source:</span> <span className="font-medium text-gray-700">{p.source}</span></div>
+                </div>
+                <div className="text-xs text-gray-600 bg-white rounded-lg border border-gray-200 p-2.5 leading-relaxed">
+                  <span className="font-semibold text-gray-700">Notes: </span>{p.notes}
+                </div>
+                {p.sourceUrl && (
+                  <a href={p.sourceUrl} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 mt-2 text-xs text-blue-600 hover:text-blue-800 hover:underline font-medium">
+                    View Listing Source &rarr;
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Footer */}
+      <div className="mt-8 text-center text-xs text-gray-400 pb-6 space-y-1">
+        <p>Sources scanned: Crexi &middot; LoopNet &middot; CityFeet &middot; BizQuest &middot; HAR &middot; TXSSA &middot; Showcase</p>
+        <p>Houston Zone: Harris Co + Conroe/Willis/Cleveland/Navasota/Brenham + Spring/Tomball/Magnolia/New Caney/Humble/Porter</p>
+        <p>Dallas Zone: Dallas County + Mesquite + Balch Springs + DFW Suburbs</p>
+        <p>Criteria: Enclosed (AC or Non-AC) &middot; $1-4M &middot; 7-9yr Gross Revenue Payback &middot; Minimal Parking</p>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<StorageDashboard />);
+  </script>
+</body>
+</html>
