@@ -182,12 +182,12 @@ const initialProperties = [
     docs: [], financials: null
   },
   {
-    id: 17, address: "Dallas (75253 area)", city: "Dallas", state: "TX", zip: "75253", zone: "Dallas",
+    id: 17, address: "13950 C F Hawn Fwy", city: "Dallas", state: "TX", zip: "75253", zone: "Dallas",
     price: null, units: null, sqft: 13112, capRate: null, facilityType: "Self-Storage",
     occupancy: null, operator: "Unknown", source: "CityFeet",
-    sourceUrl: "https://www.cityfeet.com/cont/dallas-tx/storage-facilities-for-sale",
-    status: "NEW", ddStatus: "Not Started", isNew: true,
-    notes: "13,112 SF self-storage in southeast Dallas (75253). Price upon request. Small facility \u2014 get address and details.",
+    sourceUrl: "https://www.cityfeet.com/cont/listing/13950-c-f-hawn-fwy-dallas-tx-75253/cs36678973?sk=50c00a313c7c45489b3ed3658bdc4fb6",
+    status: "TRACKING", ddStatus: "In Progress", isNew: false,
+    notes: "13,112 SF self-storage on C F Hawn Fwy, SE Dallas. Price upon request. OM requested from listing agent \u2014 awaiting response. Need pricing and financials to evaluate.",
     docs: [], financials: null
   },
   {
@@ -456,7 +456,7 @@ function StorageDashboard() {
   const priorityActions = [
     { priority: 1, action: "Get pricing for 522 Crenshaw Rd (28,200 SF) in Pasadena \u2014 call Blake Baker at eXp Realty: 832-289-2176", urgency: "HIGH" },
     { priority: 2, action: "Deep-dive 2601 Willowbrook Rd OM \u2014 model rent bumps to market ($97\u2192$111 on 10x10s), validate pro forma assumptions", urgency: "MEDIUM" },
-    { priority: 3, action: "Investigate Dallas 75253 listing (13,112 SF) \u2014 identify address, get pricing details", urgency: "MEDIUM" },
+    { priority: 3, action: "Follow up on 13950 C F Hawn Fwy, Dallas (13,112 SF) \u2014 OM requested from agent, awaiting response", urgency: "MEDIUM" },
     { priority: 4, action: "Contact Adam Schober re: North Houston 3-Property Group \u2014 (903) 941-3655", urgency: "MEDIUM" },
     { priority: 5, action: "Request pricing from Direct Equity for 14531 FM 529, Houston (53,610 SF)", urgency: "LOW" },
   ];
