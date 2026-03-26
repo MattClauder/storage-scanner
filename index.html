@@ -43,23 +43,6 @@ const initialProperties = [
     }
   },
   {
-    id: 2, address: "Dallas County (undisclosed)", city: "Dallas", state: "TX", zip: "", zone: "Dallas",
-    price: 3000000, units: 258, sqft: null, capRate: 6.11, facilityType: "Enclosed",
-    occupancy: null, operator: "Private Seller", source: "Broker / Off-market", sourceUrl: null,
-    status: "STRONG", ddStatus: "Financials Requested", isNew: false,
-    notes: "Seller financing available. 6.11% cap rate. Strong deal if numbers verify.",
-    docs: [], financials: null
-  },
-  {
-    id: 3, address: "Undisclosed (Two-Building)", city: "Dallas", state: "TX", zip: "", zone: "Dallas",
-    price: 1800000, units: null, sqft: null, capRate: null, facilityType: "Enclosed",
-    occupancy: "94-100%", operator: "Private Seller", source: "Crexi",
-    sourceUrl: "https://www.crexi.com/properties/TX/Dallas/Self-Storage",
-    status: "STRONG", ddStatus: "Financials Requested", isNew: false,
-    notes: "CRITICAL priority. Two buildings, 94-100% occupancy avg. Best price-to-performance in pipeline.",
-    docs: [], financials: null
-  },
-  {
     id: 4, address: "3818 N Town East Blvd + 12504 Quail Dr", city: "Mesquite / Balch Springs", state: "TX", zip: "75150", zone: "Dallas",
     price: 3600000, units: 273, sqft: null, capRate: null, facilityType: "Enclosed (Non-AC)",
     occupancy: null, operator: "Private Seller", source: "LoopNet",
@@ -437,14 +420,12 @@ function StorageDashboard() {
   }), [properties]);
 
   const priorityActions = [
-    { priority: 1, action: "Request financials for $1.8M Dallas two-building facility (94-100% occupancy)", urgency: "CRITICAL" },
-    { priority: 2, action: "Get pricing on 3020 Duncanville Rd, Dallas \u2014 172 enclosed units at only 35% occupancy = massive value-add if priced under $2M", urgency: "HIGH" },
-    { priority: 3, action: "Request pricing for 522 Crenshaw Rd (28,200 SF) and 2319 Preston Ave (29,724 SF) in Pasadena \u2014 both new enclosed listings", urgency: "HIGH" },
-    { priority: 4, action: "Follow up on Dallas County 258 units ($3M, 6.11% cap) \u2014 verify seller financing terms and request P&L", urgency: "HIGH" },
-    { priority: 5, action: "Deep-dive 2601 Willowbrook Rd OM \u2014 model rent bumps to market ($97\u2192$111 on 10x10s), validate pro forma assumptions", urgency: "MEDIUM" },
-    { priority: 6, action: "Investigate Dallas 75253 listing (13,112 SF) \u2014 identify address, get pricing details", urgency: "MEDIUM" },
-    { priority: 7, action: "Contact Adam Schober re: North Houston 3-Property Group \u2014 (903) 941-3655", urgency: "MEDIUM" },
-    { priority: 8, action: "Request pricing from Direct Equity for 14531 FM 529, Houston (53,610 SF)", urgency: "LOW" },
+    { priority: 1, action: "Get pricing on 3020 Duncanville Rd, Dallas \u2014 172 enclosed units at only 35% occupancy = massive value-add if priced under $2M", urgency: "HIGH" },
+    { priority: 2, action: "Request pricing for 522 Crenshaw Rd (28,200 SF) and 2319 Preston Ave (29,724 SF) in Pasadena \u2014 both new enclosed listings", urgency: "HIGH" },
+    { priority: 3, action: "Deep-dive 2601 Willowbrook Rd OM \u2014 model rent bumps to market ($97\u2192$111 on 10x10s), validate pro forma assumptions", urgency: "MEDIUM" },
+    { priority: 4, action: "Investigate Dallas 75253 listing (13,112 SF) \u2014 identify address, get pricing details", urgency: "MEDIUM" },
+    { priority: 5, action: "Contact Adam Schober re: North Houston 3-Property Group \u2014 (903) 941-3655", urgency: "MEDIUM" },
+    { priority: 6, action: "Request pricing from Direct Equity for 14531 FM 529, Houston (53,610 SF)", urgency: "LOW" },
   ];
 
   return (
