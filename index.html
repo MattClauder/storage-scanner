@@ -29,7 +29,12 @@ const initialProperties = [
     sourceUrl: "https://www.crexi.com/properties/TX/Dallas/Self-Storage",
     status: "STRONG", ddStatus: "In Progress", isNew: false,
     notes: "OM received from Franklin Street. 280 non-climate units across 6 buildings on 1.79 AC. Built 1973, stucco/metal. Gated w/ keypad, Sitelink software, remote-manageable. Current rents well below market — avg $97 vs $111 median on 10x10s. Major value-add via lease-up + rent bumps.",
-    docs: ["OM", "Rent Roll", "T-12", "P&L"],
+    docs: [
+      { type: "OM", url: "docs/willowbrook/US%20Storage%20Centers%20-%20OM.pdf" },
+      { type: "Rent Roll", url: "docs/willowbrook/US%20Storage%20Centers%20-%20OM.pdf#page=11" },
+      { type: "T-12", url: "docs/willowbrook/US%20Storage%20Centers%20-%20OM.pdf#page=12" },
+      { type: "P&L", url: "docs/willowbrook/US%20Storage%20Centers%20-%20OM.pdf#page=12" }
+    ],
     financials: {
       noi: 200483, proFormaNoi: 340163, proFormaCapRate: 9.37,
       grossRevenue: 506691, grossRevenuePayback: 7.17,
@@ -154,7 +159,9 @@ const initialProperties = [
     sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/harris-county-tx/for-sale/",
     status: "TRACKING", ddStatus: "In Progress", isNew: false,
     notes: "6.68 AC, 5 existing storage buildings w/ plans for 17 total (permitting in works). Enclosed, auto gate entry, house on-site (office/rental). Right off I-45. NO PRICE YET \u2014 call Blake Baker, eXp Realty: 832-289-2176 / blake@blakebaker.net. Need pricing to confirm if in $1-4M range, then request financials.",
-    docs: ["OM"], financials: null
+    docs: [
+      { type: "OM", url: "docs/crenshaw/522%20Crenshaw%20Flyer.pdf" }
+    ], financials: null
   },
   {
     id: 15, address: "2319-2323 Preston Ave", city: "Pasadena", state: "TX", zip: "77503", zone: "Houston",
@@ -227,9 +234,10 @@ function DocsBadge({ docs }) {
       <span style={{fontSize:"10px"}}>&#128196;</span> None
     </span>
   );
+  const names = docs.map(d => typeof d === "string" ? d : d.type);
   return (
-    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs bg-teal-50 text-teal-700 border border-teal-200 font-medium" title={docs.join(", ")}>
-      <span style={{fontSize:"10px"}}>&#9989;</span> {docs.join(", ")}
+    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs bg-teal-50 text-teal-700 border border-teal-200 font-medium" title={names.join(", ")}>
+      <span style={{fontSize:"10px"}}>&#9989;</span> {names.join(", ")}
     </span>
   );
 }
@@ -283,7 +291,8 @@ function FinancialSummary({ f, price }) {
 
 function DDChecklist({ docs }) {
   const coreDocs = ["OM", "Rent Roll", "T-12", "P&L"];
-  const hasDoc = (type) => docs && docs.includes(type);
+  const getDoc = (type) => docs && docs.find(d => (typeof d === "string" ? d : d.type) === type);
+  const hasDoc = (type) => !!getDoc(type);
   const coreCount = coreDocs.filter(hasDoc).length;
   const pct = Math.round((coreCount / coreDocs.length) * 100);
 
@@ -298,11 +307,18 @@ function DDChecklist({ docs }) {
         }`}>{pct}% Core</span>
       </div>
       <div>
-        {coreDocs.map(type => (
-          <div key={type} className={`flex items-center gap-1.5 py-0.5 text-xs ${hasDoc(type) ? "text-emerald-700" : "text-gray-400"}`}>
-            <span style={{fontSize:"11px"}}>{hasDoc(type) ? "\u2705" : "\u274C"}</span>
-            <span>{type}</span>
-          </div>
+        {coreDocs.map(type => {
+          const doc = getDoc(type);
+          const url = doc && typeof doc === "object" ? doc.url : null;
+          return (
+          <div key={type} className={`flex items-center gap-1.5 py-0.5 text-xs ${doc ? "text-emerald-700" : "text-gray-400"}`}>
+            <span style={{fontSize:"11px"}}>{doc ? "\u2705" : "\u274C"}</span>
+            {url ? (
+              <a href={url} target="_blank" rel="noopener noreferrer" className="underline hover:text-emerald-900 cursor-pointer">{type}</a>
+            ) : (
+              <span>{type}</span>
+            )}
+          </div>);})
         ))}
       </div>
     </div>
