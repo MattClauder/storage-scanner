@@ -168,8 +168,8 @@ const initialProperties = [
     price: null, units: null, sqft: 29724, capRate: null, facilityType: "Self-Storage",
     occupancy: null, operator: "Unknown", source: "LoopNet",
     sourceUrl: "https://www.loopnet.com/Listing/17614186/2323-PRESTON-Pasadena-TX/",
-    status: "NEW", ddStatus: "Not Started", isNew: true,
-    notes: "29,724 SF self-storage with fenced yard, trailer parking, electricity. Price upon request. Verify enclosed units.",
+    status: "DEAD", ddStatus: "Not Started", isNew: false,
+    notes: "CLOSED \u2014 Manually marked dead on 2026-03-26. 29,724 SF self-storage with fenced yard, trailer parking, electricity. Sale price unknown.",
     docs: [], financials: null
   },
   {
@@ -202,7 +202,7 @@ const initialProperties = [
 ];
 
 const DD_STATUSES = ["Not Started", "Pending", "In Progress", "Financials Requested", "Complete", "Overpriced"];
-const PROPERTY_STATUSES = ["NEW", "STRONG", "TRACKING", "DD REVIEWED"];
+const PROPERTY_STATUSES = ["NEW", "STRONG", "TRACKING", "DD REVIEWED", "DEAD"];
 const DOC_TYPES = ["OM", "P&L", "Rent Roll", "T-12", "Photos", "Inspection", "Appraisal", "LOI"];
 
 function formatPrice(price) {
@@ -220,6 +220,7 @@ function StatusBadge({ status }) {
     "NEW": "bg-blue-100 text-blue-800 border-blue-300",
     "TRACKING": "bg-yellow-100 text-yellow-800 border-yellow-300",
     "DD REVIEWED": "bg-purple-100 text-purple-800 border-purple-300",
+    "DEAD": "bg-red-100 text-red-800 border-red-300",
   };
   return (
     <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold border ${colors[status] || "bg-gray-100 text-gray-700 border-gray-300"}`}>
@@ -454,7 +455,7 @@ function StorageDashboard() {
 
   const priorityActions = [
     { priority: 1, action: "Get pricing on 3020 Duncanville Rd, Dallas \u2014 172 enclosed units at only 35% occupancy = massive value-add if priced under $2M", urgency: "HIGH" },
-    { priority: 2, action: "Request pricing for 522 Crenshaw Rd (28,200 SF) and 2319 Preston Ave (29,724 SF) in Pasadena \u2014 both new enclosed listings", urgency: "HIGH" },
+    { priority: 2, action: "Get pricing for 522 Crenshaw Rd (28,200 SF) in Pasadena \u2014 call Blake Baker at eXp Realty: 832-289-2176", urgency: "HIGH" },
     { priority: 3, action: "Deep-dive 2601 Willowbrook Rd OM \u2014 model rent bumps to market ($97\u2192$111 on 10x10s), validate pro forma assumptions", urgency: "MEDIUM" },
     { priority: 4, action: "Investigate Dallas 75253 listing (13,112 SF) \u2014 identify address, get pricing details", urgency: "MEDIUM" },
     { priority: 5, action: "Contact Adam Schober re: North Houston 3-Property Group \u2014 (903) 941-3655", urgency: "MEDIUM" },
