@@ -283,7 +283,6 @@ function FinancialSummary({ f, price }) {
 
 function DDChecklist({ docs }) {
   const coreDocs = ["OM", "Rent Roll", "T-12", "P&L"];
-  const additionalDocs = ["Photos", "Inspection", "Appraisal", "LOI"];
   const hasDoc = (type) => docs && docs.includes(type);
   const coreCount = coreDocs.filter(hasDoc).length;
   const pct = Math.round((coreCount / coreDocs.length) * 100);
@@ -298,25 +297,13 @@ function DDChecklist({ docs }) {
           "bg-gray-100 text-gray-500"
         }`}>{pct}% Core</span>
       </div>
-      <div className="grid grid-cols-2 gap-1">
-        <div>
-          <div className="text-xs text-gray-400 font-medium mb-1">Core Documents</div>
-          {coreDocs.map(type => (
-            <div key={type} className={`flex items-center gap-1.5 py-0.5 text-xs ${hasDoc(type) ? "text-emerald-700" : "text-gray-400"}`}>
-              <span style={{fontSize:"11px"}}>{hasDoc(type) ? "\u2705" : "\u274C"}</span>
-              <span>{type}</span>
-            </div>
-          ))}
-        </div>
-        <div>
-          <div className="text-xs text-gray-400 font-medium mb-1">Additional</div>
-          {additionalDocs.map(type => (
-            <div key={type} className={`flex items-center gap-1.5 py-0.5 text-xs ${hasDoc(type) ? "text-emerald-700" : "text-gray-400"}`}>
-              <span style={{fontSize:"11px"}}>{hasDoc(type) ? "\u2705" : "\u274C"}</span>
-              <span>{type}</span>
-            </div>
-          ))}
-        </div>
+      <div>
+        {coreDocs.map(type => (
+          <div key={type} className={`flex items-center gap-1.5 py-0.5 text-xs ${hasDoc(type) ? "text-emerald-700" : "text-gray-400"}`}>
+            <span style={{fontSize:"11px"}}>{hasDoc(type) ? "\u2705" : "\u274C"}</span>
+            <span>{type}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
