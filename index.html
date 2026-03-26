@@ -177,8 +177,8 @@ const initialProperties = [
     price: null, units: 172, sqft: 19649, capRate: null, facilityType: "Enclosed (Non-AC)",
     occupancy: "35-38%", operator: "Insure Self Storage", source: "LoopNet / Showcase",
     sourceUrl: "https://www.loopnet.com/Listing/3020-Duncanville-Rd-Dallas-TX/35554099/",
-    status: "NEW", ddStatus: "Not Started", isNew: true,
-    notes: "172 enclosed units, 19,649 SF. Only 35-38% occupied \u2014 major value-add if priced right. Price upon request. GET PRICING ASAP.",
+    status: "DEAD", ddStatus: "Not Started", isNew: false,
+    notes: "SOLD \u2014 Marked dead on 2026-03-26. 172 enclosed units, 19,649 SF, 35-38% occupied. Sale price unknown \u2014 not yet in public records. Was listed via CBRE.",
     docs: [], financials: null
   },
   {
@@ -454,12 +454,11 @@ function StorageDashboard() {
   }), [properties]);
 
   const priorityActions = [
-    { priority: 1, action: "Get pricing on 3020 Duncanville Rd, Dallas \u2014 172 enclosed units at only 35% occupancy = massive value-add if priced under $2M", urgency: "HIGH" },
-    { priority: 2, action: "Get pricing for 522 Crenshaw Rd (28,200 SF) in Pasadena \u2014 call Blake Baker at eXp Realty: 832-289-2176", urgency: "HIGH" },
-    { priority: 3, action: "Deep-dive 2601 Willowbrook Rd OM \u2014 model rent bumps to market ($97\u2192$111 on 10x10s), validate pro forma assumptions", urgency: "MEDIUM" },
-    { priority: 4, action: "Investigate Dallas 75253 listing (13,112 SF) \u2014 identify address, get pricing details", urgency: "MEDIUM" },
-    { priority: 5, action: "Contact Adam Schober re: North Houston 3-Property Group \u2014 (903) 941-3655", urgency: "MEDIUM" },
-    { priority: 6, action: "Request pricing from Direct Equity for 14531 FM 529, Houston (53,610 SF)", urgency: "LOW" },
+    { priority: 1, action: "Get pricing for 522 Crenshaw Rd (28,200 SF) in Pasadena \u2014 call Blake Baker at eXp Realty: 832-289-2176", urgency: "HIGH" },
+    { priority: 2, action: "Deep-dive 2601 Willowbrook Rd OM \u2014 model rent bumps to market ($97\u2192$111 on 10x10s), validate pro forma assumptions", urgency: "MEDIUM" },
+    { priority: 3, action: "Investigate Dallas 75253 listing (13,112 SF) \u2014 identify address, get pricing details", urgency: "MEDIUM" },
+    { priority: 4, action: "Contact Adam Schober re: North Houston 3-Property Group \u2014 (903) 941-3655", urgency: "MEDIUM" },
+    { priority: 5, action: "Request pricing from Direct Equity for 14531 FM 529, Houston (53,610 SF)", urgency: "LOW" },
   ];
 
   return (
