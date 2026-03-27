@@ -212,6 +212,31 @@ const initialProperties = [
     notes: "CLOSED \u2014 Manually marked dead on 2026-03-26. $349,900, only 5,000 SF \u2014 too small for criteria.",
     docs: [], financials: null
   },
+  {
+    id: 19, address: "7440 Elm St", city: "The Colony", state: "TX", zip: "75056", zone: "Dallas",
+    price: 1200000, units: 93, sqft: 9300, capRate: 5.89, facilityType: "Enclosed (Non-AC)",
+    occupancy: "95%", operator: "LifeSmart Storage (M&M Mini Storage)", source: "Versal Partners (Logan Foster)",
+    sourceUrl: "https://lifesmartstorage.sharplaunch.com",
+    status: "STRONG", ddStatus: "In Progress", isNew: true,
+    notes: "Full OM + rent roll + P&L + occupancy history received from Logan Foster (Versal Partners). 91 NC units + 2 parking on 0.53 AC. Built 1984, steel/metal/concrete. 95% physical occ, 85% economic occ. Avg unit 102 SF. 3 buildings, on-site office. Denton County. 8.8 NRSF/capita (5mi). Strong demographics \u2014 $163K avg HHI within 5mi. 32,530 VPD on Main St. Actual 2025 revenue $101,415 with $31,754 OpEx = $69,661 actual NOI.",
+    docs: [
+      { type: "OM", url: "docs/lifesmart/LifeSmart%20Storage%20-%20OM.pdf" },
+      { type: "Rent Roll", url: "docs/lifesmart/LifeSmart%20Storage%20-%20OM.pdf#page=11" },
+      { type: "T-12", url: "docs/lifesmart/LifeSmart%20Storage%20-%20OM.pdf#page=12" },
+      { type: "P&L", url: "docs/lifesmart/LifeSmart%20Storage%20-%20OM.pdf#page=12" }
+    ],
+    financials: {
+      noi: 70661, proFormaNoi: 87578, proFormaCapRate: 7.30,
+      grossRevenue: 101415, grossRevenuePayback: 11.83,
+      totalOpex: 31754, expenseRatio: 30.35,
+      proFormaGrossRevenue: 135023, proFormaExpenseRatio: 35.14,
+      nrsf: 9300, pricePerSF: 129.03, landArea: 0.53,
+      yearBuilt: 1984, buildings: 3,
+      occupancyUnit: 95, occupancySF: 94, occupancyEcon: 85,
+      yr3Noi: 90655, yr5Noi: 95849,
+      broker: "Versal Partners (Logan Foster) \u2014 214-435-7966"
+    }
+  },
 ];
 
 const DD_STATUSES = ["Not Started", "Pending", "In Progress", "Financials Requested", "Complete", "Overpriced"];
