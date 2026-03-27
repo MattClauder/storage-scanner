@@ -740,9 +740,6 @@ function StorageDashboard() {
                 <span className="text-xs text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded">{p.facilityType}</span>
                 {p.occupancy && <span className="text-xs text-gray-500">Occ: {p.occupancy}</span>}
                 <span className="text-xs text-gray-400 italic">via {p.source}</span>
-                <div className="ml-auto" onClick={e => e.stopPropagation()}>
-                  <DDStatusDropdown value={p.ddStatus} onChange={(v) => updateDDStatus(p.id, v)} />
-                </div>
               </div>
             </div>
 
