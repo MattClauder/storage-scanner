@@ -102,12 +102,25 @@ const initialProperties = [
   },
   {
     id: 8, address: "309 W Archer Rd", city: "Baytown", state: "TX", zip: "77521", zone: "Houston",
-    price: 2200000, units: null, sqft: null, capRate: 6.41, facilityType: "Self-Storage",
-    occupancy: null, operator: "Unknown", source: "LoopNet",
+    price: 2200000, units: 238, sqft: 235224, capRate: 6.41, facilityType: "Boat & RV Storage (Covered/Open)",
+    occupancy: "80%", operator: "Boat & RV Storage", source: "Funk Group (Wade Funk)",
     sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/harris-county-tx/for-sale/",
-    status: "TRACKING", ddStatus: "Not Started", isNew: false,
-    notes: "$2.2M, 6.41% cap rate. In budget. Baytown is outer Houston zone \u2014 verify enclosed type.",
-    docs: [], financials: null
+    status: "STRONG", ddStatus: "In Progress", isNew: false,
+    notes: "5.4 AC, built 2022. 238 spaces (45 covered). $20,064/mo revenue (up 10% YoY), $11,248/mo expenses. ~$141K NOI, 6.41% cap. 80% occupied (up 27% YoY). GR payback 9.1yr. Mixed Use zoning, no FEMA floodplain, all utilities connected. Expansion potential via additional covered spaces. Broker: Wade Funk \u2014 512-705-9722 / wade@funk.com",
+    docs: [
+      { type: "OM", url: "docs/archer/Boat%20RV%20Storage%20-%20OM.pdf" },
+      { type: "P&L", url: "docs/archer/Boat%20RV%20Storage%20-%20OM.pdf#page=2" }
+    ],
+    financials: {
+      noi: 141000, proFormaNoi: null, proFormaCapRate: null,
+      grossRevenue: 240768, grossRevenuePayback: 9.14,
+      totalOpex: 134981, expenseRatio: 56.06,
+      nrsf: 235224, pricePerSF: 9.35, landArea: 5.4,
+      yearBuilt: 2022, buildings: null,
+      occupancyUnit: 80, occupancySF: null, occupancyEcon: null,
+      yr3Noi: null, yr5Noi: null,
+      broker: "Funk Group (Wade Funk) \u2014 512-705-9722"
+    }
   },
   {
     id: 9, address: "11101 Ella Blvd", city: "Houston", state: "TX", zip: "", zone: "Houston",
