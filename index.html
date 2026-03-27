@@ -69,8 +69,8 @@ const initialProperties = [
     price: 3600000, units: 273, sqft: null, capRate: null, facilityType: "Enclosed (Non-AC)",
     occupancy: null, operator: "Private Seller", source: "LoopNet",
     sourceUrl: "https://www.loopnet.com/Listing/Self-Storage-Portfolio/25786169/",
-    status: "DD REVIEWED", ddStatus: "Overpriced", isNew: false,
-    notes: "DD reviewed \u2014 overpriced at $3.6M. Fair value est. $2.2-2.8M. 200 units Mesquite + 73 units Balch Springs.",
+    status: "DEAD", ddStatus: "Overpriced", isNew: false,
+    notes: "DEAD 2026-03-26 \u2014 overpriced at $3.6M. Fair value est. $2.2-2.8M. 200 units Mesquite + 73 units Balch Springs. Killed by Matt.",
     docs: [], financials: null
   },
   {
@@ -436,6 +436,7 @@ function StorageDashboard() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [sortBy, setSortBy] = useState("status");
   const [expandedId, setExpandedId] = useState(null);
+  const [showDead, setShowDead] = useState(false);
 
   const updateDDStatus = (id, newStatus) => {
     setProperties(prev => prev.map(p => p.id === id ? { ...p, ddStatus: newStatus } : p));
@@ -445,6 +446,7 @@ function StorageDashboard() {
 
   const filtered = useMemo(() => {
     let result = [...properties];
+    if (!showDead && statusFilter !== "DEAD") result = result.filter(p => p.status !== "DEAD");
     if (zoneFilter !== "All") result = result.filter(p => p.zone === zoneFilter);
     if (statusFilter !== "All") result = result.filter(p => p.status === statusFilter);
     result.sort((a, b) => {
@@ -455,7 +457,7 @@ function StorageDashboard() {
       return 0;
     });
     return result;
-  }, [properties, zoneFilter, statusFilter, sortBy]);
+  }, [properties, zoneFilter, statusFilter, sortBy, showDead]);
 
   const stats = useMemo(() => ({
     total: properties.length,
@@ -466,11 +468,6 @@ function StorageDashboard() {
     withFinancials: properties.filter(p => p.financials).length,
   }), [properties]);
 
-  const priorityActions = [
-    { priority: 1, action: "Get pricing for 522 Crenshaw Rd (28,200 SF) in Pasadena \u2014 call Blake Baker at eXp Realty: 832-289-2176", urgency: "HIGH" },
-    { priority: 2, action: "Deep-dive 2601 Willowbrook Rd OM \u2014 model rent bumps to market ($97\u2192$111 on 10x10s), validate pro forma assumptions", urgency: "MEDIUM" },
-    { priority: 3, action: "Follow up on 13950 C F Hawn Fwy, Dallas (13,112 SF) \u2014 OM requested from agent, awaiting response", urgency: "MEDIUM" },
-  ];
 
   return (
     <div className="min-h-screen bg-gray-50 p-3 sm:p-6" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
@@ -508,27 +505,6 @@ function StorageDashboard() {
       {/* Deal Comparison */}
       <DealComparison properties={properties} />
 
-      {/* Priority Actions */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 mb-4">
-        <h2 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3">Priority Actions This Week</h2>
-        <div className="space-y-2.5">
-          {priorityActions.map((item) => (
-            <div key={item.priority} className="flex items-start gap-3 text-sm">
-              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-gray-800 text-white text-xs flex items-center justify-center font-bold mt-0.5">
-                {item.priority}
-              </span>
-              <span className="flex-1 text-gray-700 leading-snug">{item.action}</span>
-              <span className={`flex-shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${
-                item.urgency === "CRITICAL" ? "bg-red-100 text-red-700" :
-                item.urgency === "HIGH" ? "bg-orange-100 text-orange-700" :
-                item.urgency === "MEDIUM" ? "bg-yellow-100 text-yellow-700" :
-                "bg-gray-100 text-gray-500"
-              }`}>{item.urgency}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Filters */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 mb-4">
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
@@ -562,6 +538,10 @@ function StorageDashboard() {
               <option value="sqft">Size</option>
             </select>
           </div>
+          <label className="flex items-center gap-1.5 cursor-pointer ml-2">
+            <input type="checkbox" checked={showDead} onChange={() => setShowDead(!showDead)} className="rounded border-gray-300" />
+            <span className="text-xs text-gray-500">Show Dead</span>
+          </label>
           <div className="ml-auto text-xs text-gray-400">{filtered.length}/{properties.length}</div>
         </div>
       </div>
