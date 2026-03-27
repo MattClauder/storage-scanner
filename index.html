@@ -286,6 +286,72 @@ const initialProperties = [
       broker: "Versal Partners (Logan Foster / Bill Bellomy) \u2014 214-435-7966"
     }
   },
+  {
+    id: 22, address: "20048 Peel Road", city: "Montgomery", state: "TX", zip: "77356", zone: "Houston",
+    price: 1700000, units: 165, sqft: 31270, capRate: null, facilityType: "Enclosed (CC/NC/Boat-RV)",
+    occupancy: "67.83%", operator: "Back Roads Storage", source: "Marcus & Millichap",
+    sourceUrl: null,
+    status: "NEW", ddStatus: "In Progress", isNew: true,
+    notes: "PRICE REDUCTION. 165 units (18 CC + 77 NC + 20 Boat/RV + 50 parking) across 11 buildings on 2.76 AC. Built 2007. Near Lake Conroe, FM 1097 frontage w/ 11K VPD. Currently undermanaged \u2014 no mgmt software, rates 50%+ below market. Current NOI is NEGATIVE due to high on-site mgmt costs ($51K) and low occupancy. Massive upside: Year 3 projected NOI of $158K (9.33% cap) at 90% occupancy. 3mi HHI $157K, 5mi pop 32K, 20% pop growth since 2020. 5 office suites generating $50K/yr. Key risk: lease-up timeline + capex needed for tech/marketing modernization.",
+    docs: [
+      { type: "OM", url: "docs/backroads/Price%20Reduction%20OM%20-%20Back%20Roads%20Storage.pdf" }
+    ],
+    financials: {
+      noi: -6645, proFormaNoi: 158543, proFormaCapRate: 9.33,
+      grossRevenue: 118760, grossRevenuePayback: 14.31,
+      totalOpex: 125405, expenseRatio: 105.6,
+      proFormaGrossRevenue: 280898, proFormaExpenseRatio: 43.6,
+      nrsf: 31270, pricePerSF: 54.37, landArea: 2.76,
+      yearBuilt: 2007, buildings: 11,
+      occupancyUnit: 67.83, occupancySF: 65.35, occupancyEcon: 65.35,
+      yr3Noi: 158543, yr5Noi: 173608,
+      broker: "Marcus & Millichap"
+    }
+  },
+  {
+    id: 23, address: "706 FM 2325", city: "Wimberley", state: "TX", zip: "78676", zone: "Other",
+    price: 1800000, units: 133, sqft: 15543, capRate: 7.18, facilityType: "Enclosed (CC + Drive-Up)",
+    occupancy: "82%", operator: "Wimberley Smart Storage", source: "Marcus & Millichap",
+    sourceUrl: null,
+    status: "NEW", ddStatus: "Not Started", isNew: true,
+    notes: "133 units (25 CC + 108 drive-up) across 8 buildings on 1.01 AC. Built 1978, expanded 2022. Remotely managed via Storable Easy software. 82% occupancy (92% CC, 80% NC). Current NOI $129K (7.18% cap). Pro forma NOI $141K (7.85% cap). Hays County, 25mi from Austin. 9,367 VPD on FM 2325. Rent rates roughly in line with market \u2014 limited upside on rate bumps. Small footprint limits expansion. Solid stable cash-flow play but thin margins for value-add.",
+    docs: [
+      { type: "OM", url: "docs/wimberley/Wimberley%20OM.pdf" }
+    ],
+    financials: {
+      noi: 129230, proFormaNoi: 141219, proFormaCapRate: 7.85,
+      grossRevenue: 177524, grossRevenuePayback: 10.14,
+      totalOpex: 48294, expenseRatio: 27.2,
+      proFormaGrossRevenue: 203039, proFormaExpenseRatio: 30.4,
+      nrsf: 15543, pricePerSF: 115.84, landArea: 1.01,
+      yearBuilt: 1978, buildings: 8,
+      occupancyUnit: 82, occupancySF: 82, occupancyEcon: 82,
+      yr3Noi: 141219, yr5Noi: null,
+      broker: "Marcus & Millichap (Karr-Cunningham Storage Team)"
+    }
+  },
+  {
+    id: 24, address: "303 County Road 704", city: "Joshua", state: "TX", zip: "76058", zone: "Dallas",
+    price: 1500000, units: 204, sqft: 28030, capRate: 8.49, facilityType: "Enclosed (Drive-Up, No CC)",
+    occupancy: "92%", operator: "Lane Prairie Storage", source: "Marcus & Millichap",
+    sourceUrl: null,
+    status: "NEW", ddStatus: "Not Started", isNew: true,
+    notes: "204 units (193 drive-up + 7 covered + 4 uncovered parking) across 10 buildings on 4.29 AC. Built 1996. Owner-operated since day one \u2014 no mgmt software, no website, no leasing office. 92% occupancy. NOI $127K (8.49% cap). Includes 50-yr cell tower lease ($1,500/mo starting Jun 2025). ~1.90 AC raw land available for expansion. Current effective rents $17K/yr below street rates. Greater DFW \u2014 Johnson County, near Chisholm Trail Pkwy. Amazon 1.7M SF warehouse opening July 2026 just 3.5mi away. 35% pop growth in Johnson Co. last 10 years, 33% projected next 10. Year 1 cap drops to 7.33% due to broker\u2019s conservative 22.5% vacancy assumption.",
+    docs: [
+      { type: "OM", url: "docs/laneprairie/Lane%20Prairie%20OM%20-%202026.pdf" }
+    ],
+    financials: {
+      noi: 127384, proFormaNoi: 145371, proFormaCapRate: 9.69,
+      grossRevenue: 168146, grossRevenuePayback: 8.92,
+      totalOpex: 40762, expenseRatio: 24.2,
+      proFormaGrossRevenue: 241439, proFormaExpenseRatio: 39.8,
+      nrsf: 28030, pricePerSF: 53.51, landArea: 4.29,
+      yearBuilt: 1996, buildings: 10,
+      occupancyUnit: 92, occupancySF: 92, occupancyEcon: 63.9,
+      yr3Noi: 131529, yr5Noi: 145371,
+      broker: "Marcus & Millichap (Brandon Karr / Thomas Dickinson)"
+    }
+  },
 ];
 
 const DD_STATUSES = ["Not Started", "Pending", "In Progress", "Financials Requested", "Complete", "Overpriced"];
