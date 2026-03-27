@@ -427,203 +427,132 @@ function DealComparison({ properties }) {
   function scoreProperty(p, effectivePrice) {
     const f = p.financials;
     let score = 0;
-    let breakdown = {};
-
-    // Recalculate GR payback and cap rates using effective price
     const grPayback = f.grossRevenue && f.grossRevenue > 0 ? effectivePrice / f.grossRevenue : null;
     const proFormaCap = f.proFormaNoi ? (f.proFormaNoi / effectivePrice) * 100 : null;
     const currentCap = f.noi && f.noi > 0 ? (f.noi / effectivePrice) * 100 : null;
-
-    // GR Payback (30 pts max — the most important metric per Matt's criteria)
+    // GR Payback (30 pts)
     if (grPayback) {
-      if (grPayback >= 7 && grPayback <= 9) { score += 25; breakdown.grp = 25; }
-      else if (grPayback < 7) { score += 30; breakdown.grp = 30; }
-      else { const pts = Math.max(0, 20 - (grPayback - 9) * 3); score += pts; breakdown.grp = Math.round(pts); }
-    } else { breakdown.grp = 0; }
-
-    // Pro forma cap rate (20 pts max)
-    if (proFormaCap) { const pts = Math.min(20, proFormaCap * 2); score += pts; breakdown.pfcap = Math.round(pts); }
-    else { breakdown.pfcap = 0; }
-
-    // Current cap / going-in yield (15 pts max)
-    if (currentCap && currentCap > 0) { const pts = Math.min(15, currentCap * 2); score += pts; breakdown.cap = Math.round(pts); }
-    else { breakdown.cap = 0; }
-
-    // Occupancy health (15 pts max — penalizes lease-up risk)
+      if (grPayback >= 7 && grPayback <= 9) score += 25;
+      else if (grPayback < 7) score += 30;
+      else score += Math.max(0, 20 - (grPayback - 9) * 3);
+    }
+    // Pro forma cap (20 pts)
+    if (proFormaCap) score += Math.min(20, proFormaCap * 2);
+    // Current cap (15 pts)
+    if (currentCap && currentCap > 0) score += Math.min(15, currentCap * 2);
+    // Occupancy (15 pts)
     const occ = f.occupancyUnit || 0;
-    if (occ >= 85) { score += 15; breakdown.occ = 15; }
-    else if (occ >= 70) { score += 10; breakdown.occ = 10; }
-    else if (occ >= 50) { score += 5; breakdown.occ = 5; }
-    else { breakdown.occ = 0; }
-
-    // Deal size fit (10 pts — $1-4M range, sweet spot $1-2.5M)
-    if (effectivePrice >= 1000000 && effectivePrice <= 2500000) { score += 10; breakdown.size = 10; }
-    else if (effectivePrice >= 2500000 && effectivePrice <= 4000000) { score += 5; breakdown.size = 5; }
-    else { breakdown.size = 0; }
-
-    // Value-add upside (10 pts max)
-    if (f.noi && f.noi > 0 && f.proFormaNoi) {
-      const upside = ((f.proFormaNoi - f.noi) / f.noi) * 100;
-      const pts = Math.min(10, upside * 0.15);
-      score += pts; breakdown.upside = Math.round(pts);
-    } else { breakdown.upside = 0; }
-
-    return {
-      score: Math.round(score),
-      grPayback,
-      proFormaCap,
-      currentCap,
-      breakdown
-    };
+    if (occ >= 85) score += 15; else if (occ >= 70) score += 10; else if (occ >= 50) score += 5;
+    // Deal size fit (10 pts)
+    if (effectivePrice >= 1000000 && effectivePrice <= 2500000) score += 10;
+    else if (effectivePrice >= 2500000 && effectivePrice <= 4000000) score += 5;
+    // Upside (10 pts)
+    if (f.noi && f.noi > 0 && f.proFormaNoi) score += Math.min(10, ((f.proFormaNoi - f.noi) / f.noi) * 100 * 0.15);
+    return { score: Math.round(score), grPayback, proFormaCap, currentCap };
   }
 
   const scored = withFinancials.map(p => {
     const effectivePrice = useOfferMode && offerPrices[p.id] ? parseInt(offerPrices[p.id]) : p.price;
-    const result = scoreProperty(p, effectivePrice);
-    return { ...p, effectivePrice, dealScore: result.score, grPayback: result.grPayback, adjProFormaCap: result.proFormaCap, adjCurrentCap: result.currentCap, breakdown: result.breakdown };
+    const r = scoreProperty(p, effectivePrice);
+    return { ...p, effectivePrice, dealScore: r.score, adjGrPayback: r.grPayback, adjProFormaCap: r.proFormaCap, adjCurrentCap: r.currentCap };
   }).sort((a, b) => b.dealScore - a.dealScore);
-
-  const medalColors = ["bg-yellow-400 text-yellow-900", "bg-gray-300 text-gray-700", "bg-amber-600 text-amber-100"];
-
-  function ScoreBar({ score, max }) {
-    const pct = Math.min(100, (score / max) * 100);
-    const color = pct >= 80 ? "bg-emerald-500" : pct >= 60 ? "bg-teal-500" : pct >= 40 ? "bg-yellow-500" : "bg-red-400";
-    return (
-      <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-        <div className={`${color} h-2.5 rounded-full transition-all duration-500`} style={{ width: pct + "%" }}></div>
-      </div>
-    );
-  }
-
-  function MiniBreakdown({ breakdown }) {
-    const items = [
-      { label: "GR Payback", val: breakdown.grp, max: 30 },
-      { label: "PF Cap", val: breakdown.pfcap, max: 20 },
-      { label: "Going-in", val: breakdown.cap, max: 15 },
-      { label: "Occupancy", val: breakdown.occ, max: 15 },
-      { label: "Deal Size", val: breakdown.size, max: 10 },
-      { label: "Upside", val: breakdown.upside, max: 10 },
-    ];
-    return (
-      <div className="grid grid-cols-3 gap-x-3 gap-y-1 mt-2">
-        {items.map(it => (
-          <div key={it.label} className="flex items-center gap-1.5">
-            <span className="text-gray-400 text-xs whitespace-nowrap" style={{fontSize:"10px",minWidth:"52px"}}>{it.label}</span>
-            <div className="flex-1"><ScoreBar score={it.val} max={it.max} /></div>
-            <span className="text-gray-500 font-mono" style={{fontSize:"10px",minWidth:"20px",textAlign:"right"}}>{it.val}</span>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  function formatCompactPrice(p) {
-    if (!p) return "\u2014";
-    if (p >= 1000000) return "$" + (p / 1000000).toFixed(p % 100000 === 0 ? 1 : 2) + "M";
-    return "$" + (p / 1000).toFixed(0) + "K";
-  }
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-teal-200 p-4 sm:p-5 mb-4">
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <h2 className="text-sm font-bold text-teal-900 uppercase tracking-wide flex items-center gap-2">
-          <span>&#127942;</span> Deal Rankings
+          <span>&#127942;</span> Deal Comparison (Properties with Financials)
         </h2>
         <button
           onClick={() => setUseOfferMode(!useOfferMode)}
           className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all ${useOfferMode ? "bg-teal-600 text-white border-teal-600 shadow-sm" : "bg-white text-teal-700 border-teal-300 hover:bg-teal-50"}`}
         >
-          {useOfferMode ? "\u2705 Offer Mode ON" : "\uD83D\uDCB0 Enable Offer Mode"}
+          {useOfferMode ? "\u2705 Offer Mode ON" : "\uD83D\uDCB0 Offer Mode"}
         </button>
       </div>
       {useOfferMode && (
-        <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 mb-4">
-          <p className="text-xs text-teal-700 mb-2 font-medium">Enter your offer price for each deal to see how scores change:</p>
+        <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 mb-3">
+          <p className="text-xs text-teal-700 mb-2 font-medium">Enter your offer price \u2014 scores and metrics recalculate live:</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {withFinancials.map(p => (
               <div key={p.id} className="flex items-center gap-2">
-                <span className="text-xs text-gray-600 truncate" style={{minWidth:"90px",maxWidth:"120px"}}>{p.city}</span>
+                <span className="text-xs text-gray-600 truncate" style={{minWidth:"80px",maxWidth:"110px"}}>{p.city}</span>
                 <span className="text-gray-300 text-xs">$</span>
-                <input
-                  type="number"
-                  placeholder={p.price ? p.price.toLocaleString() : "0"}
-                  value={offerPrices[p.id] || ""}
+                <input type="number" placeholder={p.price ? p.price.toLocaleString() : "0"} value={offerPrices[p.id] || ""}
                   onChange={e => setOffer(p.id, e.target.value)}
-                  className="flex-1 text-xs border border-gray-300 rounded px-2 py-1 focus:border-teal-500 focus:ring-1 focus:ring-teal-200 outline-none"
-                  style={{maxWidth:"120px"}}
-                />
+                  className="flex-1 text-xs border border-gray-300 rounded px-2 py-1 focus:border-teal-500 focus:ring-1 focus:ring-teal-200 outline-none" style={{maxWidth:"120px"}} />
                 {offerPrices[p.id] && p.price ? (
-                  <span className="text-xs font-semibold text-red-500" style={{minWidth:"40px"}}>
-                    {((1 - parseInt(offerPrices[p.id]) / p.price) * 100).toFixed(0)}% off
-                  </span>
+                  <span className="text-xs font-semibold text-red-500">{((1 - parseInt(offerPrices[p.id]) / p.price) * 100).toFixed(0)}% off</span>
                 ) : null}
               </div>
             ))}
           </div>
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-        {scored.map((p, i) => {
-          const f = p.financials;
-          const discount = useOfferMode && offerPrices[p.id] ? ((1 - p.effectivePrice / p.price) * 100) : 0;
-          const grpColor = p.grPayback && p.grPayback >= 7 && p.grPayback <= 9 ? "text-emerald-600" : p.grPayback && p.grPayback < 7 ? "text-emerald-700" : "text-red-500";
-          const scoreColor = p.dealScore >= 75 ? "from-emerald-500 to-teal-600" : p.dealScore >= 55 ? "from-teal-500 to-cyan-600" : p.dealScore >= 35 ? "from-yellow-500 to-orange-500" : "from-red-400 to-red-500";
-          const borderColor = i === 0 ? "border-emerald-400 shadow-md shadow-emerald-100" : "border-gray-200";
-          return (
-            <div key={p.id} className={`relative border-2 rounded-xl p-4 ${borderColor} bg-white transition-all hover:shadow-md`}>
-              {i < 3 && (
-                <div className={`absolute -top-2.5 -left-2.5 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shadow-sm ${medalColors[i] || "bg-gray-200 text-gray-600"}`}>
-                  {i + 1}
-                </div>
-              )}
-              <div className="absolute -top-2.5 right-3">
-                <div className={`bg-gradient-to-r ${scoreColor} text-white text-xs font-black px-2.5 py-0.5 rounded-full shadow-sm`}>
-                  {p.dealScore}/100
-                </div>
-              </div>
-              <div className="mt-1 mb-3">
-                <div className="font-bold text-gray-900 text-sm leading-tight">{p.operator || p.address}</div>
-                <div className="text-xs text-gray-400">{p.city}, {p.state} {p.zip}</div>
-              </div>
-              <div className="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs mb-3">
-                <div>
-                  <span className="text-gray-400">Ask:</span>
-                  <span className={`font-semibold ml-1 ${discount > 0 ? "line-through text-gray-400" : "text-gray-800"}`}>{formatCompactPrice(p.price)}</span>
-                  {discount > 0 && <span className="font-bold text-teal-700 ml-1">{formatCompactPrice(p.effectivePrice)}</span>}
-                </div>
-                <div>
-                  <span className="text-gray-400">Units:</span>
-                  <span className="font-semibold text-gray-800 ml-1">{p.units || "\u2014"}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">Occ:</span>
-                  <span className={`font-semibold ml-1 ${(f.occupancyUnit || 0) >= 80 ? "text-emerald-600" : (f.occupancyUnit || 0) >= 50 ? "text-yellow-600" : "text-red-500"}`}>{p.occupancy}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">Type:</span>
-                  <span className="font-semibold text-gray-800 ml-1 truncate">{p.facilityType ? p.facilityType.replace("Enclosed ", "").replace("(","").replace(")","") : "\u2014"}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">GR PB:</span>
-                  <span className={`font-bold ml-1 ${grpColor}`}>{p.grPayback ? p.grPayback.toFixed(1) + "yr" : "\u2014"}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">NOI:</span>
-                  <span className={`font-semibold ml-1 ${f.noi && f.noi > 0 ? "text-gray-800" : "text-red-500"}`}>{f.noi ? (f.noi < 0 ? "-$" + Math.abs(f.noi).toLocaleString() : "$" + f.noi.toLocaleString()) : "\u2014"}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">Cap:</span>
-                  <span className="font-semibold text-gray-800 ml-1">{p.adjCurrentCap && p.adjCurrentCap > 0 ? p.adjCurrentCap.toFixed(1) + "%" : "\u2014"}</span>
-                </div>
-                <div>
-                  <span className="text-gray-400">PF Cap:</span>
-                  <span className="font-bold text-teal-700 ml-1">{p.adjProFormaCap ? p.adjProFormaCap.toFixed(1) + "%" : "\u2014"}</span>
-                </div>
-              </div>
-              <MiniBreakdown breakdown={p.breakdown} />
-            </div>
-          );
-        })}
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="border-b border-gray-200">
+              <th className="text-left py-2 pr-3 text-gray-500 font-medium">Rank</th>
+              <th className="text-left py-2 pr-3 text-gray-500 font-medium">Property</th>
+              <th className="text-right py-2 pr-3 text-gray-500 font-medium">{useOfferMode ? "Offer" : "Price"}</th>
+              <th className="text-right py-2 pr-3 text-gray-500 font-medium">Occ</th>
+              <th className="text-right py-2 pr-3 text-gray-500 font-medium">Current NOI</th>
+              <th className="text-right py-2 pr-3 text-gray-500 font-medium">Cap Rate</th>
+              <th className="text-right py-2 pr-3 text-gray-500 font-medium">GR Payback</th>
+              <th className="text-right py-2 pr-3 text-gray-500 font-medium">PF NOI</th>
+              <th className="text-right py-2 pr-3 text-gray-500 font-medium">PF Cap</th>
+              <th className="text-right py-2 pr-3 text-gray-500 font-medium">Upside</th>
+              <th className="text-right py-2 text-gray-500 font-medium">Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {scored.map((p, i) => {
+              const f = p.financials;
+              const upside = f.noi && f.noi > 0 && f.proFormaNoi ? (((f.proFormaNoi - f.noi) / f.noi) * 100) : null;
+              const hasOffer = useOfferMode && offerPrices[p.id];
+              return (
+                <tr key={p.id} className={`border-b border-gray-100 hover:bg-gray-50 ${i === 0 ? "bg-teal-50/40" : ""}`}>
+                  <td className="py-2.5 pr-3">
+                    <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${i === 0 ? "bg-teal-600 text-white" : "bg-gray-200 text-gray-600"}`}>
+                      {i + 1}
+                    </span>
+                  </td>
+                  <td className="py-2.5 pr-3">
+                    <div className="font-semibold text-gray-900">{p.address}</div>
+                    <div className="text-gray-400">{p.city}, {p.state}</div>
+                  </td>
+                  <td className="py-2.5 pr-3 text-right">
+                    {hasOffer ? (
+                      <div>
+                        <span className="line-through text-gray-400">{formatPrice(p.price)}</span>
+                        <div className="font-bold text-teal-700">{formatPrice(p.effectivePrice)}</div>
+                      </div>
+                    ) : (
+                      <span className="font-semibold text-gray-900">{formatPrice(p.price)}</span>
+                    )}
+                  </td>
+                  <td className={`py-2.5 pr-3 text-right font-semibold ${(f.occupancyUnit || 0) >= 80 ? "text-green-700" : (f.occupancyUnit || 0) >= 50 ? "text-yellow-600" : "text-red-500"}`}>
+                    {p.occupancy || "\u2014"}
+                  </td>
+                  <td className={`py-2.5 pr-3 text-right ${f.noi && f.noi < 0 ? "text-red-500" : "text-gray-700"}`}>{f.noi ? (f.noi < 0 ? "-" + formatDollars(Math.abs(f.noi)) : formatDollars(f.noi)) : "\u2014"}</td>
+                  <td className="py-2.5 pr-3 text-right text-gray-700">{p.adjCurrentCap && p.adjCurrentCap > 0 ? p.adjCurrentCap.toFixed(2) + "%" : "\u2014"}</td>
+                  <td className={`py-2.5 pr-3 text-right font-semibold ${p.adjGrPayback && p.adjGrPayback >= 7 && p.adjGrPayback <= 9 ? "text-green-700" : p.adjGrPayback && p.adjGrPayback < 7 ? "text-emerald-700" : "text-orange-600"}`}>
+                    {p.adjGrPayback ? p.adjGrPayback.toFixed(1) + "yr" : "\u2014"}
+                  </td>
+                  <td className="py-2.5 pr-3 text-right font-semibold text-teal-700">{formatDollars(f.proFormaNoi)}</td>
+                  <td className="py-2.5 pr-3 text-right font-semibold text-teal-700">{p.adjProFormaCap ? p.adjProFormaCap.toFixed(2) + "%" : "\u2014"}</td>
+                  <td className="py-2.5 pr-3 text-right font-semibold text-emerald-600">{upside ? "+" + upside.toFixed(0) + "%" : "\u2014"}</td>
+                  <td className="py-2.5 text-right">
+                    <span className={`inline-flex px-2 py-0.5 rounded-full font-bold ${p.dealScore >= 70 ? "bg-teal-100 text-teal-800" : p.dealScore >= 50 ? "bg-yellow-100 text-yellow-800" : "bg-gray-100 text-gray-600"}`}>
+                      {p.dealScore}
+                    </span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
       {withFinancials.length === 1 && (
         <p className="text-xs text-gray-400 mt-3 italic">Upload OMs for more properties to compare deals side by side.</p>
