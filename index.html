@@ -96,8 +96,8 @@ const initialProperties = [
     price: null, units: null, sqft: 53610, capRate: null, facilityType: "Self-Storage",
     occupancy: null, operator: "Direct Equity", source: "LoopNet / CityFeet",
     sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/houston-tx/for-sale/",
-    status: "TRACKING", ddStatus: "Not Started", isNew: false,
-    notes: "53,610 SF specialty facility. Price upon request. Large footprint \u2014 need pricing to evaluate.",
+    status: "DEAD", ddStatus: "Not Started", isNew: false,
+    notes: "CLOSED \u2014 Marked dead on 2026-03-26. Selling equity in the operation, not the facility itself. Not a real estate acquisition.",
     docs: [], financials: null
   },
   {
@@ -458,7 +458,6 @@ function StorageDashboard() {
     { priority: 2, action: "Deep-dive 2601 Willowbrook Rd OM \u2014 model rent bumps to market ($97\u2192$111 on 10x10s), validate pro forma assumptions", urgency: "MEDIUM" },
     { priority: 3, action: "Follow up on 13950 C F Hawn Fwy, Dallas (13,112 SF) \u2014 OM requested from agent, awaiting response", urgency: "MEDIUM" },
     { priority: 4, action: "Contact Adam Schober re: North Houston 3-Property Group \u2014 (903) 941-3655", urgency: "MEDIUM" },
-    { priority: 5, action: "Request pricing from Direct Equity for 14531 FM 529, Houston (53,610 SF)", urgency: "LOW" },
   ];
 
   return (
