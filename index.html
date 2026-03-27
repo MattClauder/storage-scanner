@@ -237,6 +237,31 @@ const initialProperties = [
       broker: "Versal Partners (Logan Foster) \u2014 214-435-7966"
     }
   },
+  {
+    id: 20, address: "201 Rathgeber Rd", city: "Wichita Falls", state: "TX", zip: "76302", zone: "Other",
+    price: 1700000, units: 207, sqft: 28700, capRate: null, facilityType: "Enclosed (Non-AC)",
+    occupancy: "31%", operator: "Rangers' Retreat Self Storage", source: "Versal Partners (Logan Foster)",
+    sourceUrl: "https://rangersretreatselfstorage.sharplaunch.com",
+    status: "NEW", ddStatus: "In Progress", isNew: true,
+    notes: "Full OM + rent rolls received from Logan Foster (Versal Partners). 187 NC units + 20 uncovered parking on 6.35 AC. Built 2023, steel/metal/gravel. 31% physical occ (58 of 187 NC occupied). LEASE-UP PLAY \u2014 brand new facility, massive vacancy. 9 buildings. Remote managed, no office. Wichita County. Expansion room available. 5mi pop 61,555, HHI $82K. 5mi NRSF/capita 9.27. Near Midwestern State University (5,324 students). 17 competitors within 5mi totaling 570K SF.",
+    docs: [
+      { type: "OM", url: "docs/rangers/Rangers%20Retreat%20-%20OM.pdf" },
+      { type: "Rent Roll", url: "docs/rangers/Rangers%20Retreat%20-%20OM.pdf#page=13" },
+      { type: "T-12", url: "docs/rangers/Rangers%20Retreat%20-%20OM.pdf#page=14" },
+      { type: "P&L", url: "docs/rangers/Rangers%20Retreat%20-%20OM.pdf#page=14" }
+    ],
+    financials: {
+      noi: null, proFormaNoi: 134131, proFormaCapRate: 7.89,
+      grossRevenue: 204660, grossRevenuePayback: 8.31,
+      totalOpex: null, expenseRatio: null,
+      proFormaGrossRevenue: 216585, proFormaExpenseRatio: 39.39,
+      nrsf: 28700, pricePerSF: 59.23, landArea: 6.35,
+      yearBuilt: 2023, buildings: 9,
+      occupancyUnit: 31, occupancySF: 33, occupancyEcon: null,
+      yr3Noi: 145941, yr5Noi: 150159,
+      broker: "Versal Partners (Logan Foster / Bill Bellomy) \u2014 214-435-7966"
+    }
+  },
 ];
 
 const DD_STATUSES = ["Not Started", "Pending", "In Progress", "Financials Requested", "Complete", "Overpriced"];
@@ -535,7 +560,7 @@ function StorageDashboard() {
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <div className="flex items-center gap-1.5">
             <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Zone</span>
-            {["All", "Houston", "Dallas"].map(z => (
+            {["All", "Houston", "Dallas", "Other"].map(z => (
               <button key={z} onClick={() => setZoneFilter(z)}
                 className={`px-2.5 py-1 text-xs rounded-full font-medium border transition-all ${
                   zoneFilter === z ? "bg-gray-800 text-white border-gray-800 shadow-sm" : "bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-700"
