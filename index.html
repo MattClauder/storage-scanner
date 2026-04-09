@@ -19,7 +19,8 @@
   <script type="text/babel">
 const { useState, useMemo } = React;
 
-const SCAN_DATE = "2026-03-26";
+const SCAN_DATE = "2026-04-08";
+const PREV_SCAN_DATE = "2026-03-26";
 
 const initialProperties = [
   {
@@ -28,7 +29,7 @@ const initialProperties = [
     occupancy: "69.47%", operator: "US Storage Centers / Macho Storage", source: "Crexi / Broker",
     sourceUrl: "https://www.crexi.com/properties/TX/Dallas/Self-Storage",
     status: "STRONG", ddStatus: "In Progress", isNew: false,
-    notes: "OM received from Franklin Street. 280 non-climate units across 6 buildings on 1.79 AC. Built 1973, stucco/metal. Gated w/ keypad, Sitelink software, remote-manageable. Current rents well below market — avg $97 vs $111 median on 10x10s. Major value-add via lease-up + rent bumps.",
+    notes: "OM received from Franklin Street. 280 non-climate units across 6 buildings on 1.79 AC. Built 1973, stucco/metal. Gated w/ keypad, Sitelink software, remote-manageable. Current rents well below market \u2014 avg $97 vs $111 median on 10x10s. Major value-add via lease-up + rent bumps.",
     docs: [
       { type: "OM", url: "docs/willowbrook/US%20Storage%20Centers%20-%20OM.pdf" },
       { type: "Rent Roll", url: "docs/willowbrook/US%20Storage%20Centers%20-%20OM.pdf#page=11" },
@@ -217,7 +218,7 @@ const initialProperties = [
     price: 1200000, units: 93, sqft: 9300, capRate: 5.89, facilityType: "Enclosed (Non-AC)",
     occupancy: "95%", operator: "LifeSmart Storage (M&M Mini Storage)", source: "Versal Partners (Logan Foster)",
     sourceUrl: "https://lifesmartstorage.sharplaunch.com",
-    status: "STRONG", ddStatus: "In Progress", isNew: true,
+    status: "STRONG", ddStatus: "In Progress", isNew: false,
     notes: "Full OM + rent roll + P&L + occupancy history received from Logan Foster (Versal Partners). 91 NC units + 2 parking on 0.53 AC. Built 1984, steel/metal/concrete. 95% physical occ, 85% economic occ. Avg unit 102 SF. 3 buildings, on-site office. Denton County. 8.8 NRSF/capita (5mi). Strong demographics \u2014 $163K avg HHI within 5mi. 32,530 VPD on Main St. Actual 2025 revenue $101,415 with $31,754 OpEx = $69,661 actual NOI.",
     docs: [
       { type: "OM", url: "docs/lifesmart/LifeSmart%20Storage%20-%20OM.pdf" },
@@ -242,7 +243,7 @@ const initialProperties = [
     price: 1700000, units: 207, sqft: 28700, capRate: null, facilityType: "Enclosed (Non-AC)",
     occupancy: "31%", operator: "Rangers' Retreat Self Storage", source: "Versal Partners (Logan Foster)",
     sourceUrl: "https://rangersretreatselfstorage.sharplaunch.com",
-    status: "NEW", ddStatus: "In Progress", isNew: true,
+    status: "TRACKING", ddStatus: "In Progress", isNew: false,
     notes: "Full OM + rent rolls received from Logan Foster (Versal Partners). 187 NC units + 20 uncovered parking on 6.35 AC. Built 2023, steel/metal/gravel. 31% physical occ (58 of 187 NC occupied). LEASE-UP PLAY \u2014 brand new facility, massive vacancy. 9 buildings. Remote managed, no office. Wichita County. Expansion room available. 5mi pop 61,555, HHI $82K. 5mi NRSF/capita 9.27. Near Midwestern State University (5,324 students). 17 competitors within 5mi totaling 570K SF.",
     docs: [
       { type: "OM", url: "docs/rangers/Rangers%20Retreat%20-%20OM.pdf" },
@@ -267,7 +268,7 @@ const initialProperties = [
     price: 2100000, units: 216, sqft: 26100, capRate: null, facilityType: "Enclosed (68% CC)",
     occupancy: "17%", operator: "Fairway Storage", source: "Versal Partners (Logan Foster)",
     sourceUrl: "https://fairwaystorage.sharplaunch.com",
-    status: "NEW", ddStatus: "In Progress", isNew: true,
+    status: "TRACKING", ddStatus: "In Progress", isNew: false,
     notes: "Brand new 2024 construction. 216 units (72 NC + 144 CC) across 6 buildings (3 AC). 17% physical occ (37 of 216), 12.5% economic occ. LEASE-UP PLAY in tiny rural market. 5mi pop 10,327, NRSF/capita 13.9 (oversupplied vs 7-8 national avg). $30K actual 2024 revenue \u2014 NEGATIVE NOI. Lease-up velocity: 2.1 units/month. Adjacent to Pecan Lakes (Lennar/DR Horton new homes). 26mi to Bryan/College Station. 3 competitors within 5mi. 72 units listed unavailable. Expansion room available. Grimes County, Houston MSA. VERDICT: Hard pass at $2.1M ask. Interesting only at $1.0-1.2M (50%+ discount). Riskiest deal of the night.",
     docs: [
       { type: "OM", url: "docs/fairway/Fairway%20Storage%20-%20OM.pdf" },
@@ -291,7 +292,7 @@ const initialProperties = [
     price: 1700000, units: 165, sqft: 31270, capRate: null, facilityType: "Enclosed (CC/NC/Boat-RV)",
     occupancy: "67.83%", operator: "Back Roads Storage", source: "Marcus & Millichap",
     sourceUrl: null,
-    status: "NEW", ddStatus: "In Progress", isNew: true,
+    status: "TRACKING", ddStatus: "In Progress", isNew: false,
     notes: "PRICE REDUCTION. 165 units (18 CC + 77 NC + 20 Boat/RV + 50 parking) across 11 buildings on 2.76 AC. Built 2007. Near Lake Conroe, FM 1097 frontage w/ 11K VPD. Currently undermanaged \u2014 no mgmt software, rates 50%+ below market. Current NOI is NEGATIVE due to high on-site mgmt costs ($51K) and low occupancy. Massive upside: Year 3 projected NOI of $158K (9.33% cap) at 90% occupancy. 3mi HHI $157K, 5mi pop 32K, 20% pop growth since 2020. 5 office suites generating $50K/yr. Key risk: lease-up timeline + capex needed for tech/marketing modernization.",
     docs: [
       { type: "OM", url: "docs/backroads/Price%20Reduction%20OM%20-%20Back%20Roads%20Storage.pdf" }
@@ -313,7 +314,7 @@ const initialProperties = [
     price: 1800000, units: 133, sqft: 15543, capRate: 7.18, facilityType: "Enclosed (CC + Drive-Up)",
     occupancy: "82%", operator: "Wimberley Smart Storage", source: "Marcus & Millichap",
     sourceUrl: null,
-    status: "NEW", ddStatus: "Not Started", isNew: true,
+    status: "TRACKING", ddStatus: "Not Started", isNew: false,
     notes: "133 units (25 CC + 108 drive-up) across 8 buildings on 1.01 AC. Built 1978, expanded 2022. Remotely managed via Storable Easy software. 82% occupancy (92% CC, 80% NC). Current NOI $129K (7.18% cap). Pro forma NOI $141K (7.85% cap). Hays County, 25mi from Austin. 9,367 VPD on FM 2325. Rent rates roughly in line with market \u2014 limited upside on rate bumps. Small footprint limits expansion. Solid stable cash-flow play but thin margins for value-add.",
     docs: [
       { type: "OM", url: "docs/wimberley/Wimberley%20OM.pdf" }
@@ -335,7 +336,7 @@ const initialProperties = [
     price: 1500000, units: 204, sqft: 28030, capRate: 8.49, facilityType: "Enclosed (Drive-Up, No CC)",
     occupancy: "92%", operator: "Lane Prairie Storage", source: "Marcus & Millichap",
     sourceUrl: null,
-    status: "NEW", ddStatus: "Not Started", isNew: true,
+    status: "STRONG", ddStatus: "Not Started", isNew: false,
     notes: "204 units (193 drive-up + 7 covered + 4 uncovered parking) across 10 buildings on 4.29 AC. Built 1996. Owner-operated since day one \u2014 no mgmt software, no website, no leasing office. 92% occupancy. NOI $127K (8.49% cap). Includes 50-yr cell tower lease ($1,500/mo starting Jun 2025). ~1.90 AC raw land available for expansion. Current effective rents $17K/yr below street rates. Greater DFW \u2014 Johnson County, near Chisholm Trail Pkwy. Amazon 1.7M SF warehouse opening July 2026 just 3.5mi away. 35% pop growth in Johnson Co. last 10 years, 33% projected next 10. Year 1 cap drops to 7.33% due to broker\u2019s conservative 22.5% vacancy assumption.",
     docs: [
       { type: "OM", url: "docs/laneprairie/Lane%20Prairie%20OM%20-%202026.pdf" }
@@ -351,6 +352,43 @@ const initialProperties = [
       yr3Noi: 131529, yr5Noi: 145371,
       broker: "Marcus & Millichap (Brandon Karr / Thomas Dickinson)"
     }
+  },
+  // ===== NEW LISTINGS FOUND 4/8/2026 SCAN =====
+  {
+    id: 25, address: "5611 S Rice Ave", city: "Houston", state: "TX", zip: "77081", zone: "Houston",
+    price: null, units: null, sqft: null, capRate: null, facilityType: "Enclosed (Climate Controlled)",
+    occupancy: null, operator: "Community Self Storage", source: "CommercialSearch / Crexi",
+    sourceUrl: "https://www.commercialsearch.com/commercial-property/us/tx/houston/community-self-storage-rice-1/",
+    status: "NEW", ddStatus: "Not Started", isNew: true,
+    notes: "Class A self-storage facility in Bellaire/Rice area. Built 2018, opened early 2019. All concrete driveways, standing seam metal roofs. Premium location in high-income Houston submarket. Price unknown \u2014 appears on CommercialSearch and may be available off-market. NEEDS: pricing confirmation, unit count, financials. Call listing broker for details.",
+    docs: [], financials: null
+  },
+  {
+    id: 26, address: "Sentinel Self Storage", city: "Rosharon", state: "TX", zip: "77583", zone: "Houston",
+    price: null, units: null, sqft: 90000, capRate: null, facilityType: "Enclosed (Climate Controlled)",
+    occupancy: null, operator: "Sentinel Storage", source: "Texas Storage Investors",
+    sourceUrl: "https://www.texasstorageinvestors.com/storage-properties.html",
+    status: "NEW", ddStatus: "Not Started", isNew: true,
+    notes: "90,000 SF facility in Rosharon (Brazoria County, south Houston corridor). Only active listing on Texas Storage Investors \u2014 all other TX properties on their site are marked SOLD. NEEDS: pricing, unit count, facility details. Contact Texas Storage Investors at 936-520-2721. Note: Rosharon is outside core target zones but within Houston MSA.",
+    docs: [], financials: null
+  },
+  {
+    id: 27, address: "Magnolia Area (4 Listings)", city: "Magnolia", state: "TX", zip: "77354", zone: "Houston",
+    price: null, units: null, sqft: null, capRate: null, facilityType: "Self-Storage (Mixed)",
+    occupancy: null, operator: "Various", source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/magnolia-tx/for-sale/",
+    status: "NEW", ddStatus: "Not Started", isNew: true,
+    notes: "4 self-storage facilities showing for sale in Magnolia TX on LoopNet (1 in ZIP 77354, 2 near Lynwood/Magnolia). Magnolia is a core target area in the Spring/Tomball/Magnolia corridor. NEEDS: individual property addresses, pricing, unit counts. Navigate LoopNet Magnolia search page to extract individual listings.",
+    docs: [], financials: null
+  },
+  {
+    id: 28, address: "1920 I-35E (LaSoto Self Storage)", city: "Lancaster", state: "TX", zip: "75146", zone: "Dallas",
+    price: null, units: 265, sqft: 44940, capRate: null, facilityType: "Enclosed",
+    occupancy: null, operator: "LaSoto Self Storage", source: "Versal (Bellomy/Foster/Horne/Johnson)",
+    sourceUrl: "https://rebusinessonline.com/versal-arranges-sale-of-265-unit-self-storage-facility-in-lancaster-texas/",
+    status: "DEAD", ddStatus: "Complete", isNew: true,
+    notes: "SOLD \u2014 March 2026. 265 units, 44,940 NRSF. Built 1980s. Sold to Dallas-based buyer. Brokers: Bill Bellomy, Logan Foster, Hugh Horne, Michael Johnson (Versal). Lancaster is a southern Dallas suburb. Logged as market comp for valuation purposes.",
+    docs: [], financials: null
   },
 ];
 
@@ -694,7 +732,6 @@ function StorageDashboard() {
     withFinancials: properties.filter(p => p.financials).length,
   }), [properties]);
 
-
   return (
     <div className="min-h-screen bg-gray-50 p-3 sm:p-6" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
       {/* Header */}
@@ -702,7 +739,7 @@ function StorageDashboard() {
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div>
             <h1 className="text-lg sm:text-xl font-bold text-gray-900">Self-Storage Acquisition Scanner</h1>
-            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Scan date: {SCAN_DATE} &middot; Houston & Dallas Zones &middot; $1-4M &middot; Enclosed facilities</p>
+            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Scan: {SCAN_DATE} &middot; Prev: {PREV_SCAN_DATE} &middot; Houston & Dallas Zones &middot; $1-4M &middot; Enclosed</p>
           </div>
           <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 border border-green-200 rounded-full px-3 py-1 text-xs font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
@@ -726,6 +763,31 @@ function StorageDashboard() {
             <div className="text-xs text-gray-500 mt-0.5">{stat.label}</div>
           </div>
         ))}
+      </div>
+
+      {/* Priority Actions This Week */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 mb-4">
+        <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-red-500"></span>
+          Priority Actions This Week
+        </h2>
+        <div className="space-y-2">
+          {[
+            { p: 1, text: "Get pricing on 5611 S Rice Ave (Community Self Storage) \u2014 Class A, Houston", tag: "NEW", c: "text-blue-700" },
+            { p: 2, text: "Browse LoopNet Magnolia page \u2014 4 listings need addresses and pricing extracted", tag: "NEW", c: "text-blue-700" },
+            { p: 3, text: "Call Texas Storage Investors (936-520-2721) re: Sentinel Rosharon 90K SF", tag: "NEW", c: "text-blue-700" },
+            { p: 4, text: "Follow up with Dominus Commercial on 13950 C F Hawn Fwy OM \u2014 817-242-2361", tag: "TRACKING", c: "text-yellow-700" },
+            { p: 5, text: "Call Blake Baker on 522 Crenshaw Rd pricing \u2014 832-289-2176", tag: "TRACKING", c: "text-yellow-700" },
+            { p: 6, text: "Request financials on 2601 Willowbrook Rd (Dallas, 280 units) \u2014 still active", tag: "STRONG", c: "text-green-700" },
+            { p: 7, text: "Advance DD on Lane Prairie (Joshua) \u2014 8.49% cap, 92% occ, Amazon catalyst", tag: "STRONG", c: "text-green-700" },
+          ].map(item => (
+            <div key={item.p} className="flex items-start gap-3 text-xs">
+              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-gray-100 text-gray-600 font-bold flex items-center justify-center text-xs">{item.p}</span>
+              <span className="flex-1 text-gray-700 leading-relaxed">{item.text}</span>
+              <span className={`flex-shrink-0 text-xs font-semibold ${item.c}`}>{item.tag}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Deal Comparison */}
