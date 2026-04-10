@@ -19,8 +19,8 @@
   <script type="text/babel">
 const { useState, useMemo } = React;
 
-const SCAN_DATE = "2026-04-08";
-const PREV_SCAN_DATE = "2026-03-26";
+const SCAN_DATE = "2026-04-09";
+const PREV_SCAN_DATE = "2026-04-08";
 
 const initialProperties = [
   {
@@ -103,7 +103,7 @@ const initialProperties = [
   },
   {
     id: 8, address: "309 W Archer Rd", city: "Baytown", state: "TX", zip: "77521", zone: "Houston",
-    price: 2200000, units: 238, sqft: 235224, capRate: 6.41, facilityType: "Boat & RV Storage (Covered/Open)",
+    price: 2100000, units: 238, sqft: 235224, capRate: 6.41, facilityType: "Boat & RV Storage (Covered/Open)",
     occupancy: "80%", operator: "Boat & RV Storage", source: "Funk Group (Wade Funk)",
     sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/harris-county-tx/for-sale/",
     status: "STRONG", ddStatus: "In Progress", isNew: false,
@@ -359,7 +359,7 @@ const initialProperties = [
     price: null, units: null, sqft: null, capRate: null, facilityType: "Enclosed (Climate Controlled)",
     occupancy: null, operator: "Community Self Storage", source: "CommercialSearch / Crexi",
     sourceUrl: "https://www.commercialsearch.com/commercial-property/us/tx/houston/community-self-storage-rice-1/",
-    status: "NEW", ddStatus: "Not Started", isNew: true,
+    status: "NEW", ddStatus: "Not Started", isNew: false,
     notes: "Class A self-storage facility in Bellaire/Rice area. Built 2018, opened early 2019. All concrete driveways, standing seam metal roofs. Premium location in high-income Houston submarket. Price unknown \u2014 appears on CommercialSearch and may be available off-market. NEEDS: pricing confirmation, unit count, financials. Call listing broker for details.",
     docs: [], financials: null
   },
@@ -368,7 +368,7 @@ const initialProperties = [
     price: null, units: null, sqft: 90000, capRate: null, facilityType: "Enclosed (Climate Controlled)",
     occupancy: null, operator: "Sentinel Storage", source: "Texas Storage Investors",
     sourceUrl: "https://www.texasstorageinvestors.com/storage-properties.html",
-    status: "NEW", ddStatus: "Not Started", isNew: true,
+    status: "NEW", ddStatus: "Not Started", isNew: false,
     notes: "90,000 SF facility in Rosharon (Brazoria County, south Houston corridor). Only active listing on Texas Storage Investors \u2014 all other TX properties on their site are marked SOLD. NEEDS: pricing, unit count, facility details. Contact Texas Storage Investors at 936-520-2721. Note: Rosharon is outside core target zones but within Houston MSA.",
     docs: [], financials: null
   },
@@ -377,8 +377,8 @@ const initialProperties = [
     price: null, units: null, sqft: null, capRate: null, facilityType: "Self-Storage (Mixed)",
     occupancy: null, operator: "Various", source: "LoopNet",
     sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/magnolia-tx/for-sale/",
-    status: "NEW", ddStatus: "Not Started", isNew: true,
-    notes: "4 self-storage facilities showing for sale in Magnolia TX on LoopNet (1 in ZIP 77354, 2 near Lynwood/Magnolia). Magnolia is a core target area in the Spring/Tomball/Magnolia corridor. NEEDS: individual property addresses, pricing, unit counts. Navigate LoopNet Magnolia search page to extract individual listings.",
+    status: "NEW", ddStatus: "Not Started", isNew: false,
+    notes: "Magnolia area search resolved: 26410 Hufsmith Conroe Rd (id 30) now REMOVED from LoopNet. 5432 FM 1488 Rd (id 31) still active at $800K. Other Magnolia listings are non-storage (car wash, retail, event venue). Individual properties now tracked separately as ids 30-31.",
     docs: [], financials: null
   },
   {
@@ -386,12 +386,57 @@ const initialProperties = [
     price: null, units: 265, sqft: 44940, capRate: null, facilityType: "Enclosed",
     occupancy: null, operator: "LaSoto Self Storage", source: "Versal (Bellomy/Foster/Horne/Johnson)",
     sourceUrl: "https://rebusinessonline.com/versal-arranges-sale-of-265-unit-self-storage-facility-in-lancaster-texas/",
-    status: "DEAD", ddStatus: "Complete", isNew: true,
+    status: "DEAD", ddStatus: "Complete", isNew: false,
     notes: "SOLD \u2014 March 2026. 265 units, 44,940 NRSF. Built 1980s. Sold to Dallas-based buyer. Brokers: Bill Bellomy, Logan Foster, Hugh Horne, Michael Johnson (Versal). Lancaster is a southern Dallas suburb. Logged as market comp for valuation purposes.",
     docs: [], financials: null
+  },,
+  {
+    id: 29, address: "7603 Wright Rd", city: "Houston", state: "TX", zip: "77041", zone: "Houston",
+    price: null, units: null, sqft: 79025, capRate: null, facilityType: "RV & Boat Storage",
+    occupancy: null, operator: "Unknown", source: "CityFeet / Crexi",
+    sourceUrl: "https://www.cityfeet.com/cont/houston-tx/storage-facilities-for-sale",
+    status: "TRACKING", ddStatus: "Not Started", isNew: true,
+    notes: "79,025 SF RV & Boat storage facility in Houston 77041. Price Upon Request. Large footprint but primarily outdoor/vehicle storage \u2014 not enclosed self-storage. Outside core acquisition criteria (enclosed units). Monitor for price disclosure. Could be value-add conversion opportunity if land is underpriced.",
+    docs: [], financials: null
   },
-];
+  {
+    id: 30, address: "26410 Hufsmith Conroe Rd", city: "Magnolia", state: "TX", zip: "77354", zone: "Houston",
+    price: null, units: 126, sqft: 68625, capRate: null, facilityType: "Enclosed (Non-AC)",
+    occupancy: "60%", operator: "Placeholder Storage", source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/Listing/26410-Hufsmith-Conroe-Rd-Magnolia-TX/31331087/",
+    status: "DEAD", ddStatus: "Complete", isNew: true,
+    notes: "REMOVED from LoopNet as of April 9, 2026 \u2014 listing no longer advertised. 126 units, 68,625 SF on 10.3 AC. Built 2022, Class B. Had 7 surveillance cameras. Was at ~60% occupancy. Magnolia target corridor. Listing pulled \u2014 possibly sold, withdrawn, or relisted with new broker. Monitor for reappearance.",
+    docs: [], financials: null
+  },
+  {
+    id: 31, address: "5432 FM 1488 Rd", city: "Magnolia", state: "TX", zip: "77354", zone: "Houston",
+    price: 800000, units: null, sqft: null, capRate: 9.4, facilityType: "Garages / Parking",
+    occupancy: null, operator: "Garages of America", source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/magnolia-tx/for-sale/",
+    status: "TRACKING", ddStatus: "Not Started", isNew: true,
+    notes: "$800K asking, 9.4% cap rate. Listed as Garages of America Unit G10-11. Classified as Parking Garage on LoopNet but in self-storage search. Magnolia target corridor. NEEDS: Clarify if this is garage/storage suites or traditional parking. High cap rate is attractive if storage use confirmed. Small deal but could be accretive.",
+    docs: [], financials: null
+  },
+  {
+    id: 32, address: "Houston 77067 (Undisclosed)", city: "Houston", state: "TX", zip: "77067", zone: "Houston",
+    price: 1300000, units: null, sqft: 11150, capRate: null, facilityType: "Enclosed (Self-Storage)",
+    occupancy: null, operator: "Unknown", source: "BizQuest",
+    sourceUrl: "https://www.bizquest.com/self-storage-businesses-for-sale-in-houston-tx/",
+    status: "TRACKING", ddStatus: "Not Started", isNew: true,
+    notes: "BizQuest listing \u2014 $1.3M, 11,150 SF self-storage in Houston 77067 (Greenspoint/North Houston area). Address undisclosed. POTENTIAL FIT \u2014 within $1-4M range and in Houston target zone. NEEDS: Contact BizQuest broker for address, unit count, financials, occupancy. Verify enclosed facility type.",
+    docs: [], financials: null
+  },
+  {
+    id: 33, address: "4650 FM 2351 Rd", city: "Friendswood", state: "TX", zip: "77546", zone: "Houston",
+    price: 453150, units: null, sqft: 1875, capRate: null, facilityType: "Self-Storage (Small)",
+    occupancy: null, operator: "Unknown", source: "CityFeet",
+    sourceUrl: "https://www.cityfeet.com/cont/houston-tx/storage-facilities-for-sale",
+    status: "DEAD", ddStatus: "Complete", isNew: true,
+    notes: "DEAD \u2014 Too small. $453K, only 1,875 SF. Not a viable acquisition target. Friendswood (Galveston County border). Logged for market awareness only.",
+    docs: [], financials: null
+  }
 
+];
 const DD_STATUSES = ["Not Started", "Pending", "In Progress", "Financials Requested", "Complete", "Overpriced"];
 const PROPERTY_STATUSES = ["NEW", "STRONG", "TRACKING", "DD REVIEWED", "DEAD"];
 const DOC_TYPES = ["OM", "P&L", "Rent Roll", "T-12", "Photos", "Inspection", "Appraisal", "LOI"];
