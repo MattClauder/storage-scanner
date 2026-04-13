@@ -7,952 +7,1042 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { margin: 0; background: #f9fafb; }
-    .loader { display:flex; align-items:center; justify-content:center; height:100vh; font-family:system-ui; color:#6b7280; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #f8fafc; }
   </style>
 </head>
 <body>
-  <div id="root"><div class="loader">Loading dashboard...</div></div>
-
+  <div id="root"></div>
   <script type="text/babel">
-const { useState, useMemo } = React;
+    const { useState, useMemo } = React;
 
-const SCAN_DATE = "2026-04-09";
-const PREV_SCAN_DATE = "2026-04-08";
+const SCAN_DATE = "April 12, 2026";
+const PREV_SCAN_DATE = "April 11, 2026";
 
-const initialProperties = [
+const properties = [
+  // ===== DALLAS ZONE - STRONG =====
   {
-    id: 1, address: "2601 Willowbrook Rd", city: "Dallas", state: "TX", zip: "75220", zone: "Dallas",
-    price: 3632000, units: 280, sqft: 41610, capRate: 5.52, facilityType: "Enclosed (Non-AC)",
-    occupancy: "69.47%", operator: "US Storage Centers / Macho Storage", source: "Crexi / Broker",
+    id: 1,
+    address: "2601 Willowbrook Rd",
+    city: "Dallas",
+    zone: "Dallas",
+    price: 3630000,
+    units: 280,
+    sqft: null,
+    capRate: null,
+    type: "Enclosed",
+    occupancy: null,
+    operator: "US Storage Centers",
+    source: "Crexi",
     sourceUrl: "https://www.crexi.com/properties/TX/Dallas/Self-Storage",
-    status: "STRONG", ddStatus: "In Progress", isNew: false,
-    notes: "OM received from Franklin Street. 280 non-climate units across 6 buildings on 1.79 AC. Built 1973, stucco/metal. Gated w/ keypad, Sitelink software, remote-manageable. Current rents well below market \u2014 avg $97 vs $111 median on 10x10s. Major value-add via lease-up + rent bumps.",
-    docs: [
-      { type: "OM", url: "docs/willowbrook/US%20Storage%20Centers%20-%20OM.pdf" },
-      { type: "Rent Roll", url: "docs/willowbrook/US%20Storage%20Centers%20-%20OM.pdf#page=11" },
-      { type: "T-12", url: "docs/willowbrook/US%20Storage%20Centers%20-%20OM.pdf#page=12" },
-      { type: "P&L", url: "docs/willowbrook/US%20Storage%20Centers%20-%20OM.pdf#page=12" }
-    ],
-    financials: {
-      noi: 200483, proFormaNoi: 340163, proFormaCapRate: 9.37,
-      grossRevenue: 506691, grossRevenuePayback: 7.17,
-      totalOpex: 177121, expenseRatio: 46.91,
-      proFormaGrossRevenue: 552527, proFormaExpenseRatio: 36.61,
-      nrsf: 41610, pricePerSF: 87.29, landArea: 1.79,
-      yearBuilt: 1973, buildings: 6,
-      occupancyUnit: 69.47, occupancySF: 74.95, occupancyEcon: 67.62,
-      yr3Noi: 340163, yr5Noi: 372633,
-      broker: "Franklin Street (Frank DeSalvo, David Perlleshi)"
-    }
+    status: "STRONG",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "280 units, strong candidate. Well-operated facility by US Storage Centers.",
   },
   {
-    id: 2, address: "Dallas County (undisclosed)", city: "Dallas", state: "TX", zip: "", zone: "Dallas",
-    price: 3000000, units: 258, sqft: null, capRate: 6.11, facilityType: "Enclosed",
-    occupancy: null, operator: "Private Seller", source: "Broker / Off-market", sourceUrl: null,
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Marked dead on 2026-03-26. No address, listing link, or broker contact on file. Untraceable lead from automated scan. 258 units, $3M, 6.11% cap, seller financing reportedly available.",
-    docs: [], financials: null
+    id: 2,
+    address: "Dallas County (Confidential)",
+    city: "Dallas",
+    zone: "Dallas",
+    price: 3000000,
+    units: 258,
+    sqft: null,
+    capRate: 6.11,
+    type: "Enclosed",
+    occupancy: null,
+    operator: "Private",
+    source: "Crexi",
+    sourceUrl: "https://www.crexi.com/properties/TX/dallas_county/Self-Storage",
+    status: "STRONG",
+    ddStatus: "Financials Requested",
+    isNew: false,
+    notes: "258 units, 6.11% cap + seller financing available. Strong deal structure.",
   },
   {
-    id: 3, address: "Undisclosed (Two-Building)", city: "Dallas", state: "TX", zip: "", zone: "Dallas",
-    price: 1800000, units: null, sqft: null, capRate: null, facilityType: "Enclosed",
-    occupancy: "94-100%", operator: "Private Seller", source: "Crexi",
-    sourceUrl: "https://www.crexi.com/properties/TX/Dallas/Self-Storage",
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Marked dead on 2026-03-26. No address on file, only a generic Crexi search link. Untraceable lead from automated scan. $1.8M, two buildings, 94-100% occupancy reported.",
-    docs: [], financials: null
+    id: 3,
+    address: "Dallas Area (Confidential)",
+    city: "Dallas",
+    zone: "Dallas",
+    price: 1800000,
+    units: null,
+    sqft: null,
+    capRate: null,
+    type: "Enclosed",
+    occupancy: "94-100%",
+    operator: "Private",
+    source: "Multiple",
+    sourceUrl: null,
+    status: "STRONG",
+    ddStatus: "In Progress",
+    isNew: false,
+    notes: "Two-building facility, 94-100% occupancy average. Excellent stabilization.",
   },
+
+  // ===== DALLAS ZONE - DD REVIEWED =====
   {
-    id: 4, address: "3818 N Town East Blvd + 12504 Quail Dr", city: "Mesquite / Balch Springs", state: "TX", zip: "75150", zone: "Dallas",
-    price: 3600000, units: 273, sqft: null, capRate: null, facilityType: "Enclosed (Non-AC)",
-    occupancy: null, operator: "Private Seller", source: "LoopNet",
+    id: 4,
+    address: "3818 N Town East Blvd + 12504 Quail Dr",
+    city: "Mesquite / Balch Springs",
+    zone: "Dallas",
+    price: 3600000,
+    units: 273,
+    sqft: null,
+    capRate: null,
+    type: "Enclosed / Non-AC",
+    occupancy: "70%",
+    operator: "Private",
+    source: "LoopNet",
     sourceUrl: "https://www.loopnet.com/Listing/Self-Storage-Portfolio/25786169/",
-    status: "DEAD", ddStatus: "Overpriced", isNew: false,
-    notes: "DEAD 2026-03-26 \u2014 overpriced at $3.6M. Fair value est. $2.2-2.8M. 200 units Mesquite + 73 units Balch Springs. Killed by Matt.",
-    docs: [], financials: null
+    status: "DD REVIEWED",
+    ddStatus: "Overpriced",
+    isNew: false,
+    notes: "Mesquite (200 units) + Balch Springs (73 units). 7 miles apart. Reviewed â overpriced at $3.6M. Still listed on LoopNet as of 4/12.",
+  },
+
+  // ===== DALLAS ZONE - TRACKING =====
+  {
+    id: 5,
+    address: "2339 Inwood Rd",
+    city: "Dallas",
+    zone: "Dallas",
+    price: null,
+    units: null,
+    sqft: 31460,
+    capRate: null,
+    type: "Self-Storage",
+    occupancy: null,
+    operator: "Unknown",
+    source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/Listing/2339-Inwood-Rd-Dallas-TX/39303130/",
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "31,460 SF. Price Upon Request. Listed by Weitzman. Still active on LoopNet Dallas County as of 4/12.",
   },
   {
-    id: 5, address: "2339 Inwood Rd", city: "Dallas", state: "TX", zip: "75235", zone: "Dallas",
-    price: null, units: null, sqft: 31460, capRate: null, facilityType: "Self-Storage",
-    occupancy: null, operator: "Unknown", source: "LoopNet / CityFeet",
-    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/dallas-tx/for-sale/",
-    status: "TRACKING", ddStatus: "Not Started", isNew: false,
-    notes: "31,460 SF, price upon request. Need to get pricing details.",
-    docs: [], financials: null
-  },
-  {
-    id: 6, address: "Deep Ellum / Downtown Dallas", city: "Dallas", state: "TX", zip: "75226", zone: "Dallas",
-    price: null, units: null, sqft: null, capRate: null, facilityType: "Self-Storage / Covered Land Play",
-    occupancy: null, operator: "Edward Holman", source: "TXSSA",
+    id: 6,
+    address: "Deep Ellum / Downtown Dallas",
+    city: "Dallas",
+    zone: "Dallas",
+    price: null,
+    units: null,
+    sqft: null,
+    capRate: null,
+    type: "Self-Storage",
+    occupancy: null,
+    operator: "Unknown",
+    source: "TXSSA",
     sourceUrl: "https://community.txssa.org/communities/community-home?CommunityKey=08a250fb-7d36-4ee6-ba57-f3216b1c2aba",
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Marked dead on 2026-03-26. Not an operating storage facility \u2014 'Covered land play' / redevelopment angle. Doesn't fit acquisition criteria.",
-    docs: [], financials: null
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "TXSSA community listing. Deep Ellum Entertainment District area. LoopNet shows 3215 Hickory St at $6.7M â over budget.",
+  },
+
+  // ===== HOUSTON ZONE - TRACKING =====
+  {
+    id: 7,
+    address: "14531 FM 529",
+    city: "Houston",
+    zone: "Houston",
+    price: null,
+    units: 388,
+    sqft: 53610,
+    capRate: null,
+    type: "Self-Storage (New Dev)",
+    occupancy: null,
+    operator: "Direct Equity Source",
+    source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/Listing/14531-FM-529-Houston-TX/38285144/",
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "FM 529 Storage. Breaks ground Q1 2026, 388-unit new dev. Fund offers 12% annual dividend. Still featured on LoopNet Harris County as of 4/12.",
   },
   {
-    id: 7, address: "14531 FM 529", city: "Houston", state: "TX", zip: "77084", zone: "Houston",
-    price: null, units: null, sqft: 53610, capRate: null, facilityType: "Self-Storage",
-    occupancy: null, operator: "Direct Equity", source: "LoopNet / CityFeet",
-    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/houston-tx/for-sale/",
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Marked dead on 2026-03-26. Selling equity in the operation, not the facility itself. Not a real estate acquisition.",
-    docs: [], financials: null
-  },
-  {
-    id: 8, address: "309 W Archer Rd", city: "Baytown", state: "TX", zip: "77521", zone: "Houston",
-    price: 2100000, units: 238, sqft: 235224, capRate: 6.41, facilityType: "Boat & RV Storage (Covered/Open)",
-    occupancy: "80%", operator: "Boat & RV Storage", source: "Funk Group (Wade Funk)",
+    id: 8,
+    address: "309 W Archer Rd",
+    city: "Baytown",
+    zone: "Houston",
+    price: 2100000,
+    units: null,
+    sqft: null,
+    capRate: 6.33,
+    type: "Self-Storage",
+    occupancy: null,
+    operator: "Unknown",
+    source: "LoopNet",
     sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/harris-county-tx/for-sale/",
-    status: "STRONG", ddStatus: "In Progress", isNew: false,
-    notes: "5.4 AC, built 2022. 238 spaces (45 covered). $20,064/mo revenue (up 10% YoY), $11,248/mo expenses. ~$141K NOI, 6.41% cap. 80% occupied (up 27% YoY). GR payback 9.1yr. Mixed Use zoning, no FEMA floodplain, all utilities connected. Expansion potential via additional covered spaces. Broker: Wade Funk \u2014 512-705-9722 / wade@funk.com",
-    docs: [
-      { type: "OM", url: "docs/archer/Boat%20RV%20Storage%20-%20OM.pdf" },
-      { type: "P&L", url: "docs/archer/Boat%20RV%20Storage%20-%20OM.pdf#page=2" }
-    ],
-    financials: {
-      noi: 141000, proFormaNoi: null, proFormaCapRate: null,
-      grossRevenue: 240768, grossRevenuePayback: 9.14,
-      totalOpex: 134981, expenseRatio: 56.06,
-      nrsf: 235224, pricePerSF: 9.35, landArea: 5.4,
-      yearBuilt: 2022, buildings: null,
-      occupancyUnit: 80, occupancySF: null, occupancyEcon: null,
-      yr3Noi: null, yr5Noi: null,
-      broker: "Funk Group (Wade Funk) \u2014 512-705-9722"
-    }
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "â¡ PRICE DROP: Was $2.2M â now $2.1M. Cap rate 6.33%. Confirmed still listed at $2.1M on 4/12. Entering strike zone.",
   },
   {
-    id: 9, address: "11101 Ella Blvd", city: "Houston", state: "TX", zip: "", zone: "Houston",
-    price: null, units: null, sqft: 77000, capRate: null, facilityType: "Logistics & Storage",
-    occupancy: null, operator: "Unknown", source: "Broker", sourceUrl: null,
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Marked dead on 2026-03-26. Not a storage facility \u2014 logistics/warehouse property.",
-    docs: [], financials: null
+    id: 9,
+    address: "11101 Ella Blvd",
+    city: "Houston",
+    zone: "Houston",
+    price: null,
+    units: null,
+    sqft: 77000,
+    capRate: null,
+    type: "Logistics & Storage",
+    occupancy: null,
+    operator: "Unknown",
+    source: "Crexi",
+    sourceUrl: "https://www.crexi.com/properties/TX/Houston/Self-Storage",
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "77,000 SF logistics & storage facility. Note: Crexi now redirects to LoopNet (CoStar merger). Not appearing in LoopNet Harris County results â may be delisted or CoStar-only.",
   },
   {
-    id: 10, address: "15608 S Brentwood St", city: "Channelview", state: "TX", zip: "", zone: "Houston",
-    price: null, units: null, sqft: null, capRate: null, facilityType: "RV & Boat Storage",
-    occupancy: null, operator: "Unknown", source: "LoopNet",
+    id: 10,
+    address: "15608 S Brentwood St",
+    city: "Channelview",
+    zone: "Houston",
+    price: null,
+    units: null,
+    sqft: null,
+    capRate: null,
+    type: "RV & Boat Storage",
+    occupancy: null,
+    operator: "Unknown",
+    source: "LoopNet",
     sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/harris-county-tx/for-sale/",
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Marked dead on 2026-03-26. Too much mixed-use clutter on the property, not purely storage.",
-    docs: [], financials: null
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "Channelview Self, RV & Boat Storage. 2 specialty properties. Not enclosed â monitor only. Still listed on LoopNet as of 4/12.",
   },
   {
-    id: 11, address: "14013 Huffmeister Rd", city: "Cypress", state: "TX", zip: "", zone: "Houston",
-    price: null, units: null, sqft: null, capRate: null, facilityType: "Contractor Storage",
-    occupancy: null, operator: "Unknown", source: "Broker", sourceUrl: null,
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Marked dead on 2026-03-26. Parking only, not storage.",
-    docs: [], financials: null
+    id: 11,
+    address: "14013 Huffmeister Rd",
+    city: "Cypress",
+    zone: "Houston",
+    price: null,
+    units: null,
+    sqft: null,
+    capRate: null,
+    type: "Contractor Storage",
+    occupancy: null,
+    operator: "Unknown",
+    source: "Crexi",
+    sourceUrl: "https://www.crexi.com/properties/TX/Houston/Self-Storage",
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "Contractor storage facility in Cypress. Not appearing in current LoopNet results â may be delisted or Crexi/CoStar-only.",
   },
   {
-    id: 12, address: "North Houston 3-Property Group", city: "Houston (North)", state: "TX", zip: "", zone: "Houston",
-    price: null, units: null, sqft: null, capRate: null, facilityType: "Self-Storage Portfolio",
-    occupancy: null, operator: "Adam Schober", source: "TXSSA",
+    id: 12,
+    address: "North Houston 3-Property Group",
+    city: "North Houston",
+    zone: "Houston",
+    price: null,
+    units: null,
+    sqft: null,
+    capRate: null,
+    type: "Self-Storage Portfolio",
+    occupancy: null,
+    operator: "Adam Schober",
+    source: "TXSSA",
     sourceUrl: "https://community.txssa.org/communities/community-home?CommunityKey=08a250fb-7d36-4ee6-ba57-f3216b1c2aba",
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Marked dead on 2026-03-26. No addresses, no listing link, no verifiable details. Untraceable TXSSA forum lead.",
-    docs: [], financials: null
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "TXSSA listing. 3-property group north of Houston. Contact Adam Schober (903) 941-3655.",
   },
   {
-    id: 13, address: "20717 Westheimer Pky", city: "Katy", state: "TX", zip: "77450", zone: "Houston",
-    price: 449000, units: null, sqft: 72200, capRate: null, facilityType: "Self-Storage",
-    occupancy: null, operator: "Unknown", source: "LoopNet / CityFeet",
-    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/houston-tx/for-sale/",
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Marked dead on 2026-03-26. Not a storage facility.",
-    docs: [], financials: null
+    id: 13,
+    address: "20717 Westheimer Pky",
+    city: "Katy",
+    zone: "Houston",
+    price: 449000,
+    units: 42,
+    sqft: 72200,
+    capRate: null,
+    type: "Self-Storage / Flex",
+    occupancy: null,
+    operator: "Compass Real Estate",
+    source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/Listing/20717-Westheimer-Pky-Katy-TX/39083678/",
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "$449K. Below target range but could be value-add. 72,200 SF lot, 42 flex condo units. Still listed on LoopNet as of 4/12.",
   },
+
+  // ===== PREVIOUSLY NEW â NOW TRACKING (found 4/11) =====
   {
-    id: 14, address: "522 Crenshaw Rd", city: "Pasadena", state: "TX", zip: "77504", zone: "Houston",
-    price: null, units: null, sqft: 28200, capRate: null, facilityType: "Enclosed",
-    occupancy: null, operator: "Crenshaw Self Storage", source: "eXp Realty (Blake Baker)",
+    id: 14,
+    address: "2319-2323 Preston Ave",
+    city: "Pasadena",
+    zone: "Houston",
+    price: null,
+    units: null,
+    sqft: 29724,
+    capRate: null,
+    type: "Self-Storage",
+    occupancy: null,
+    operator: "Unknown",
+    source: "LoopNet",
     sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/harris-county-tx/for-sale/",
-    status: "TRACKING", ddStatus: "In Progress", isNew: false,
-    notes: "6.68 AC, 5 existing storage buildings w/ plans for 17 total (permitting in works). Enclosed, auto gate entry, house on-site (office/rental). Right off I-45. NO PRICE YET \u2014 call Blake Baker, eXp Realty: 832-289-2176 / blake@blakebaker.net. Need pricing to confirm if in $1-4M range, then request financials.",
-    docs: [
-      { type: "OM", url: "docs/crenshaw/522%20Crenshaw%20Flyer.pdf" }
-    ], financials: null
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "29,724 SF self-storage in Pasadena. Price Upon Request. First found 4/11. Still listed on LoopNet Harris County as of 4/12. Needs pricing inquiry.",
   },
   {
-    id: 15, address: "2319-2323 Preston Ave", city: "Pasadena", state: "TX", zip: "77503", zone: "Houston",
-    price: null, units: null, sqft: 29724, capRate: null, facilityType: "Self-Storage",
-    occupancy: null, operator: "Unknown", source: "LoopNet",
-    sourceUrl: "https://www.loopnet.com/Listing/17614186/2323-PRESTON-Pasadena-TX/",
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Manually marked dead on 2026-03-26. 29,724 SF self-storage with fenced yard, trailer parking, electricity. Sale price unknown.",
-    docs: [], financials: null
+    id: 15,
+    address: "522 Crenshaw Rd",
+    city: "Pasadena",
+    zone: "Houston",
+    price: null,
+    units: null,
+    sqft: 28200,
+    capRate: null,
+    type: "Self-Storage / Boat & Mini",
+    occupancy: null,
+    operator: "Crenshaw Boat & Mini Storage",
+    source: "LoopNet",
+    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/harris-county-tx/for-sale/",
+    status: "TRACKING",
+    ddStatus: "Not Started",
+    isNew: false,
+    notes: "Crenshaw Self Storage. 28,200 SF. Boat & Mini storage combo. First found 4/11. Still listed on LoopNet as of 4/12. Contact: (713) 944-8019.",
   },
+
+  // ===== NEW FINDINGS - THIS SCAN ð =====
   {
-    id: 16, address: "3020 Duncanville Rd", city: "Dallas", state: "TX", zip: "75211", zone: "Dallas",
-    price: null, units: 172, sqft: 19649, capRate: null, facilityType: "Enclosed (Non-AC)",
-    occupancy: "35-38%", operator: "Insure Self Storage", source: "LoopNet / Showcase",
+    id: 16,
+    address: "3020 Duncanville Rd",
+    city: "Dallas",
+    zone: "Dallas",
+    price: null,
+    units: 172,
+    sqft: 19649,
+    capRate: null,
+    type: "Enclosed / Non-AC",
+    occupancy: null,
+    operator: "Insure Self Storage",
+    source: "LoopNet",
     sourceUrl: "https://www.loopnet.com/Listing/3020-Duncanville-Rd-Dallas-TX/35554099/",
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "SOLD \u2014 Marked dead on 2026-03-26. 172 enclosed units, 19,649 SF, 35-38% occupied. Sale price unknown \u2014 not yet in public records. Was listed via CBRE.",
-    docs: [], financials: null
+    status: "NEW",
+    ddStatus: "Not Started",
+    isNew: true,
+    notes: "ð NEW â Insure Self Storage. 172 ground-level units. 19,649 NRSF. Below market rents (10x10 drive-up at $99 vs $120 market avg). Listed by CBRE. CoStar/premium listing â may not appear in free LoopNet search. Strong value-add candidate.",
   },
-  {
-    id: 17, address: "13950 C F Hawn Fwy", city: "Dallas", state: "TX", zip: "75253", zone: "Dallas",
-    price: null, units: 159, sqft: 13112, capRate: null, facilityType: "Enclosed",
-    occupancy: "72%", operator: "Hwy 175 Mini Warehouses", source: "CityFeet / Dominus Commercial",
-    sourceUrl: "https://www.cityfeet.com/cont/listing/13950-c-f-hawn-fwy-dallas-tx-75253/cs36678973?sk=50c00a313c7c45489b3ed3658bdc4fb6",
-    status: "TRACKING", ddStatus: "In Progress", isNew: false,
-    notes: "159 drive-up enclosed units on 0.891 AC + adjacent 0.55 AC expansion parcel. Built 1970s, 72% occupied, on-site manager office, asphalt drives, Hwy 175 E exposure. Call for pricing. Brokers: Tyler Trahant & Chad Snyder, Dominus Commercial (Argus Self Storage Advisors) \u2014 817-242-2361. OM requested, awaiting response.",
-    docs: [{ type: "OM", url: "docs/cfhawn/Hwy%20175%20Mini%20Warehouses%20-%20Flyer.pdf" }], financials: null
-  },
-  {
-    id: 18, address: "16100 Firetower Rd", city: "Conroe", state: "TX", zip: "77306", zone: "Houston",
-    price: 349900, units: null, sqft: 5000, capRate: null, facilityType: "Self-Storage",
-    occupancy: null, operator: "Allstate", source: "LoopNet",
-    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/conroe-tx/for-sale/",
-    status: "DEAD", ddStatus: "Not Started", isNew: false,
-    notes: "CLOSED \u2014 Manually marked dead on 2026-03-26. $349,900, only 5,000 SF \u2014 too small for criteria.",
-    docs: [], financials: null
-  },
-  {
-    id: 19, address: "7440 Elm St", city: "The Colony", state: "TX", zip: "75056", zone: "Dallas",
-    price: 1200000, units: 93, sqft: 9300, capRate: 5.89, facilityType: "Enclosed (Non-AC)",
-    occupancy: "95%", operator: "LifeSmart Storage (M&M Mini Storage)", source: "Versal Partners (Logan Foster)",
-    sourceUrl: "https://lifesmartstorage.sharplaunch.com",
-    status: "STRONG", ddStatus: "In Progress", isNew: false,
-    notes: "Full OM + rent roll + P&L + occupancy history received from Logan Foster (Versal Partners). 91 NC units + 2 parking on 0.53 AC. Built 1984, steel/metal/concrete. 95% physical occ, 85% economic occ. Avg unit 102 SF. 3 buildings, on-site office. Denton County. 8.8 NRSF/capita (5mi). Strong demographics \u2014 $163K avg HHI within 5mi. 32,530 VPD on Main St. Actual 2025 revenue $101,415 with $31,754 OpEx = $69,661 actual NOI.",
-    docs: [
-      { type: "OM", url: "docs/lifesmart/LifeSmart%20Storage%20-%20OM.pdf" },
-      { type: "Rent Roll", url: "docs/lifesmart/LifeSmart%20Storage%20-%20OM.pdf#page=11" },
-      { type: "T-12", url: "docs/lifesmart/LifeSmart%20Storage%20-%20OM.pdf#page=12" },
-      { type: "P&L", url: "docs/lifesmart/LifeSmart%20Storage%20-%20OM.pdf#page=12" }
-    ],
-    financials: {
-      noi: 70661, proFormaNoi: 87578, proFormaCapRate: 7.30,
-      grossRevenue: 101415, grossRevenuePayback: 11.83,
-      totalOpex: 31754, expenseRatio: 30.35,
-      proFormaGrossRevenue: 135023, proFormaExpenseRatio: 35.14,
-      nrsf: 9300, pricePerSF: 129.03, landArea: 0.53,
-      yearBuilt: 1984, buildings: 3,
-      occupancyUnit: 95, occupancySF: 94, occupancyEcon: 85,
-      yr3Noi: 90655, yr5Noi: 95849,
-      broker: "Versal Partners (Logan Foster) \u2014 214-435-7966"
-    }
-  },
-  {
-    id: 20, address: "201 Rathgeber Rd", city: "Wichita Falls", state: "TX", zip: "76302", zone: "Other",
-    price: 1700000, units: 207, sqft: 28700, capRate: null, facilityType: "Enclosed (Non-AC)",
-    occupancy: "31%", operator: "Rangers' Retreat Self Storage", source: "Versal Partners (Logan Foster)",
-    sourceUrl: "https://rangersretreatselfstorage.sharplaunch.com",
-    status: "TRACKING", ddStatus: "In Progress", isNew: false,
-    notes: "Full OM + rent rolls received from Logan Foster (Versal Partners). 187 NC units + 20 uncovered parking on 6.35 AC. Built 2023, steel/metal/gravel. 31% physical occ (58 of 187 NC occupied). LEASE-UP PLAY \u2014 brand new facility, massive vacancy. 9 buildings. Remote managed, no office. Wichita County. Expansion room available. 5mi pop 61,555, HHI $82K. 5mi NRSF/capita 9.27. Near Midwestern State University (5,324 students). 17 competitors within 5mi totaling 570K SF.",
-    docs: [
-      { type: "OM", url: "docs/rangers/Rangers%20Retreat%20-%20OM.pdf" },
-      { type: "Rent Roll", url: "docs/rangers/Rangers%20Retreat%20-%20OM.pdf#page=13" },
-      { type: "T-12", url: "docs/rangers/Rangers%20Retreat%20-%20OM.pdf#page=14" },
-      { type: "P&L", url: "docs/rangers/Rangers%20Retreat%20-%20OM.pdf#page=14" }
-    ],
-    financials: {
-      noi: null, proFormaNoi: 134131, proFormaCapRate: 7.89,
-      grossRevenue: 204660, grossRevenuePayback: 8.31,
-      totalOpex: null, expenseRatio: null,
-      proFormaGrossRevenue: 216585, proFormaExpenseRatio: 39.39,
-      nrsf: 28700, pricePerSF: 59.23, landArea: 6.35,
-      yearBuilt: 2023, buildings: 9,
-      occupancyUnit: 31, occupancySF: 33, occupancyEcon: null,
-      yr3Noi: 145941, yr5Noi: 150159,
-      broker: "Versal Partners (Logan Foster / Bill Bellomy) \u2014 214-435-7966"
-    }
-  },
-  {
-    id: 21, address: "906 Fairway Dr", city: "Navasota", state: "TX", zip: "77868", zone: "Houston",
-    price: 2100000, units: 216, sqft: 26100, capRate: null, facilityType: "Enclosed (68% CC)",
-    occupancy: "17%", operator: "Fairway Storage", source: "Versal Partners (Logan Foster)",
-    sourceUrl: "https://fairwaystorage.sharplaunch.com",
-    status: "TRACKING", ddStatus: "In Progress", isNew: false,
-    notes: "Brand new 2024 construction. 216 units (72 NC + 144 CC) across 6 buildings (3 AC). 17% physical occ (37 of 216), 12.5% economic occ. LEASE-UP PLAY in tiny rural market. 5mi pop 10,327, NRSF/capita 13.9 (oversupplied vs 7-8 national avg). $30K actual 2024 revenue \u2014 NEGATIVE NOI. Lease-up velocity: 2.1 units/month. Adjacent to Pecan Lakes (Lennar/DR Horton new homes). 26mi to Bryan/College Station. 3 competitors within 5mi. 72 units listed unavailable. Expansion room available. Grimes County, Houston MSA. VERDICT: Hard pass at $2.1M ask. Interesting only at $1.0-1.2M (50%+ discount). Riskiest deal of the night.",
-    docs: [
-      { type: "OM", url: "docs/fairway/Fairway%20Storage%20-%20OM.pdf" },
-      { type: "Rent Roll", url: "docs/fairway/Fairway%20Storage%20-%20OM.pdf#page=12" },
-      { type: "P&L", url: "docs/fairway/Fairway%20Storage%20-%20OM.pdf#page=13" }
-    ],
-    financials: {
-      noi: -52408, proFormaNoi: 158396, proFormaCapRate: 7.54,
-      grossRevenue: 30399, grossRevenuePayback: 69.1,
-      totalOpex: 82807, expenseRatio: null,
-      proFormaGrossRevenue: 271237, proFormaExpenseRatio: 41.6,
-      nrsf: 26100, pricePerSF: 80.46, landArea: null,
-      yearBuilt: 2024, buildings: 6,
-      occupancyUnit: 17, occupancySF: 17, occupancyEcon: 12.5,
-      yr3Noi: 129205, yr5Noi: 177207,
-      broker: "Versal Partners (Logan Foster / Bill Bellomy) \u2014 214-435-7966"
-    }
-  },
-  {
-    id: 22, address: "20048 Peel Road", city: "Montgomery", state: "TX", zip: "77356", zone: "Houston",
-    price: 1700000, units: 165, sqft: 31270, capRate: null, facilityType: "Enclosed (CC/NC/Boat-RV)",
-    occupancy: "67.83%", operator: "Back Roads Storage", source: "Marcus & Millichap",
-    sourceUrl: null,
-    status: "TRACKING", ddStatus: "In Progress", isNew: false,
-    notes: "PRICE REDUCTION. 165 units (18 CC + 77 NC + 20 Boat/RV + 50 parking) across 11 buildings on 2.76 AC. Built 2007. Near Lake Conroe, FM 1097 frontage w/ 11K VPD. Currently undermanaged \u2014 no mgmt software, rates 50%+ below market. Current NOI is NEGATIVE due to high on-site mgmt costs ($51K) and low occupancy. Massive upside: Year 3 projected NOI of $158K (9.33% cap) at 90% occupancy. 3mi HHI $157K, 5mi pop 32K, 20% pop growth since 2020. 5 office suites generating $50K/yr. Key risk: lease-up timeline + capex needed for tech/marketing modernization.",
-    docs: [
-      { type: "OM", url: "docs/backroads/Price%20Reduction%20OM%20-%20Back%20Roads%20Storage.pdf" }
-    ],
-    financials: {
-      noi: -6645, proFormaNoi: 158543, proFormaCapRate: 9.33,
-      grossRevenue: 118760, grossRevenuePayback: 14.31,
-      totalOpex: 125405, expenseRatio: 105.6,
-      proFormaGrossRevenue: 280898, proFormaExpenseRatio: 43.6,
-      nrsf: 31270, pricePerSF: 54.37, landArea: 2.76,
-      yearBuilt: 2007, buildings: 11,
-      occupancyUnit: 67.83, occupancySF: 65.35, occupancyEcon: 65.35,
-      yr3Noi: 158543, yr5Noi: 173608,
-      broker: "Marcus & Millichap"
-    }
-  },
-  {
-    id: 23, address: "706 FM 2325", city: "Wimberley", state: "TX", zip: "78676", zone: "Other",
-    price: 1800000, units: 133, sqft: 15543, capRate: 7.18, facilityType: "Enclosed (CC + Drive-Up)",
-    occupancy: "82%", operator: "Wimberley Smart Storage", source: "Marcus & Millichap",
-    sourceUrl: null,
-    status: "TRACKING", ddStatus: "Not Started", isNew: false,
-    notes: "133 units (25 CC + 108 drive-up) across 8 buildings on 1.01 AC. Built 1978, expanded 2022. Remotely managed via Storable Easy software. 82% occupancy (92% CC, 80% NC). Current NOI $129K (7.18% cap). Pro forma NOI $141K (7.85% cap). Hays County, 25mi from Austin. 9,367 VPD on FM 2325. Rent rates roughly in line with market \u2014 limited upside on rate bumps. Small footprint limits expansion. Solid stable cash-flow play but thin margins for value-add.",
-    docs: [
-      { type: "OM", url: "docs/wimberley/Wimberley%20OM.pdf" }
-    ],
-    financials: {
-      noi: 129230, proFormaNoi: 141219, proFormaCapRate: 7.85,
-      grossRevenue: 177524, grossRevenuePayback: 10.14,
-      totalOpex: 48294, expenseRatio: 27.2,
-      proFormaGrossRevenue: 203039, proFormaExpenseRatio: 30.4,
-      nrsf: 15543, pricePerSF: 115.84, landArea: 1.01,
-      yearBuilt: 1978, buildings: 8,
-      occupancyUnit: 82, occupancySF: 82, occupancyEcon: 82,
-      yr3Noi: 141219, yr5Noi: null,
-      broker: "Marcus & Millichap (Karr-Cunningham Storage Team)"
-    }
-  },
-  {
-    id: 24, address: "303 County Road 704", city: "Joshua", state: "TX", zip: "76058", zone: "Dallas",
-    price: 1500000, units: 204, sqft: 28030, capRate: 8.49, facilityType: "Enclosed (Drive-Up, No CC)",
-    occupancy: "92%", operator: "Lane Prairie Storage", source: "Marcus & Millichap",
-    sourceUrl: null,
-    status: "STRONG", ddStatus: "Not Started", isNew: false,
-    notes: "204 units (193 drive-up + 7 covered + 4 uncovered parking) across 10 buildings on 4.29 AC. Built 1996. Owner-operated since day one \u2014 no mgmt software, no website, no leasing office. 92% occupancy. NOI $127K (8.49% cap). Includes 50-yr cell tower lease ($1,500/mo starting Jun 2025). ~1.90 AC raw land available for expansion. Current effective rents $17K/yr below street rates. Greater DFW \u2014 Johnson County, near Chisholm Trail Pkwy. Amazon 1.7M SF warehouse opening July 2026 just 3.5mi away. 35% pop growth in Johnson Co. last 10 years, 33% projected next 10. Year 1 cap drops to 7.33% due to broker\u2019s conservative 22.5% vacancy assumption.",
-    docs: [
-      { type: "OM", url: "docs/laneprairie/Lane%20Prairie%20OM%20-%202026.pdf" }
-    ],
-    financials: {
-      noi: 127384, proFormaNoi: 145371, proFormaCapRate: 9.69,
-      grossRevenue: 168146, grossRevenuePayback: 8.92,
-      totalOpex: 40762, expenseRatio: 24.2,
-      proFormaGrossRevenue: 241439, proFormaExpenseRatio: 39.8,
-      nrsf: 28030, pricePerSF: 53.51, landArea: 4.29,
-      yearBuilt: 1996, buildings: 10,
-      occupancyUnit: 92, occupancySF: 92, occupancyEcon: 63.9,
-      yr3Noi: 131529, yr5Noi: 145371,
-      broker: "Marcus & Millichap (Brandon Karr / Thomas Dickinson)"
-    }
-  },
-  // ===== NEW LISTINGS FOUND 4/8/2026 SCAN =====
-  {
-    id: 25, address: "5611 S Rice Ave", city: "Houston", state: "TX", zip: "77081", zone: "Houston",
-    price: null, units: null, sqft: null, capRate: null, facilityType: "Enclosed (Climate Controlled)",
-    occupancy: null, operator: "Community Self Storage", source: "CommercialSearch / Crexi",
-    sourceUrl: "https://www.commercialsearch.com/commercial-property/us/tx/houston/community-self-storage-rice-1/",
-    status: "NEW", ddStatus: "Not Started", isNew: false,
-    notes: "Class A self-storage facility in Bellaire/Rice area. Built 2018, opened early 2019. All concrete driveways, standing seam metal roofs. Premium location in high-income Houston submarket. Price unknown \u2014 appears on CommercialSearch and may be available off-market. NEEDS: pricing confirmation, unit count, financials. Call listing broker for details.",
-    docs: [], financials: null
-  },
-  {
-    id: 26, address: "Sentinel Self Storage", city: "Rosharon", state: "TX", zip: "77583", zone: "Houston",
-    price: null, units: null, sqft: 90000, capRate: null, facilityType: "Enclosed (Climate Controlled)",
-    occupancy: null, operator: "Sentinel Storage", source: "Texas Storage Investors",
-    sourceUrl: "https://www.texasstorageinvestors.com/storage-properties.html",
-    status: "NEW", ddStatus: "Not Started", isNew: false,
-    notes: "90,000 SF facility in Rosharon (Brazoria County, south Houston corridor). Only active listing on Texas Storage Investors \u2014 all other TX properties on their site are marked SOLD. NEEDS: pricing, unit count, facility details. Contact Texas Storage Investors at 936-520-2721. Note: Rosharon is outside core target zones but within Houston MSA.",
-    docs: [], financials: null
-  },
-  {
-    id: 27, address: "Magnolia Area (4 Listings)", city: "Magnolia", state: "TX", zip: "77354", zone: "Houston",
-    price: null, units: null, sqft: null, capRate: null, facilityType: "Self-Storage (Mixed)",
-    occupancy: null, operator: "Various", source: "LoopNet",
-    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/magnolia-tx/for-sale/",
-    status: "NEW", ddStatus: "Not Started", isNew: false,
-    notes: "Magnolia area search resolved: 26410 Hufsmith Conroe Rd (id 30) now REMOVED from LoopNet. 5432 FM 1488 Rd (id 31) still active at $800K. Other Magnolia listings are non-storage (car wash, retail, event venue). Individual properties now tracked separately as ids 30-31.",
-    docs: [], financials: null
-  },
-  {
-    id: 28, address: "1920 I-35E (LaSoto Self Storage)", city: "Lancaster", state: "TX", zip: "75146", zone: "Dallas",
-    price: null, units: 265, sqft: 44940, capRate: null, facilityType: "Enclosed",
-    occupancy: null, operator: "LaSoto Self Storage", source: "Versal (Bellomy/Foster/Horne/Johnson)",
-    sourceUrl: "https://rebusinessonline.com/versal-arranges-sale-of-265-unit-self-storage-facility-in-lancaster-texas/",
-    status: "DEAD", ddStatus: "Complete", isNew: false,
-    notes: "SOLD \u2014 March 2026. 265 units, 44,940 NRSF. Built 1980s. Sold to Dallas-based buyer. Brokers: Bill Bellomy, Logan Foster, Hugh Horne, Michael Johnson (Versal). Lancaster is a southern Dallas suburb. Logged as market comp for valuation purposes.",
-    docs: [], financials: null
-  },
-  {
-    id: 29, address: "7603 Wright Rd", city: "Houston", state: "TX", zip: "77041", zone: "Houston",
-    price: null, units: null, sqft: 79025, capRate: null, facilityType: "RV & Boat Storage",
-    occupancy: null, operator: "Unknown", source: "CityFeet / Crexi",
-    sourceUrl: "https://www.cityfeet.com/cont/houston-tx/storage-facilities-for-sale",
-    status: "TRACKING", ddStatus: "Not Started", isNew: true,
-    notes: "79,025 SF RV & Boat storage facility in Houston 77041. Price Upon Request. Large footprint but primarily outdoor/vehicle storage \u2014 not enclosed self-storage. Outside core acquisition criteria (enclosed units). Monitor for price disclosure. Could be value-add conversion opportunity if land is underpriced.",
-    docs: [], financials: null
-  },
-  {
-    id: 30, address: "26410 Hufsmith Conroe Rd", city: "Magnolia", state: "TX", zip: "77354", zone: "Houston",
-    price: null, units: 126, sqft: 68625, capRate: null, facilityType: "Enclosed (Non-AC)",
-    occupancy: "60%", operator: "Placeholder Storage", source: "LoopNet",
-    sourceUrl: "https://www.loopnet.com/Listing/26410-Hufsmith-Conroe-Rd-Magnolia-TX/31331087/",
-    status: "DEAD", ddStatus: "Complete", isNew: true,
-    notes: "REMOVED from LoopNet as of April 9, 2026 \u2014 listing no longer advertised. 126 units, 68,625 SF on 10.3 AC. Built 2022, Class B. Had 7 surveillance cameras. Was at ~60% occupancy. Magnolia target corridor. Listing pulled \u2014 possibly sold, withdrawn, or relisted with new broker. Monitor for reappearance.",
-    docs: [], financials: null
-  },
-  {
-    id: 31, address: "5432 FM 1488 Rd", city: "Magnolia", state: "TX", zip: "77354", zone: "Houston",
-    price: 800000, units: null, sqft: null, capRate: 9.4, facilityType: "Garages / Parking",
-    occupancy: null, operator: "Garages of America", source: "LoopNet",
-    sourceUrl: "https://www.loopnet.com/search/self-storage-facilities/magnolia-tx/for-sale/",
-    status: "TRACKING", ddStatus: "Not Started", isNew: true,
-    notes: "$800K asking, 9.4% cap rate. Listed as Garages of America Unit G10-11. Classified as Parking Garage on LoopNet but in self-storage search. Magnolia target corridor. NEEDS: Clarify if this is garage/storage suites or traditional parking. High cap rate is attractive if storage use confirmed. Small deal but could be accretive.",
-    docs: [], financials: null
-  },
-  {
-    id: 32, address: "Houston 77067 (Undisclosed)", city: "Houston", state: "TX", zip: "77067", zone: "Houston",
-    price: 1300000, units: null, sqft: 11150, capRate: null, facilityType: "Enclosed (Self-Storage)",
-    occupancy: null, operator: "Unknown", source: "BizQuest",
-    sourceUrl: "https://www.bizquest.com/self-storage-businesses-for-sale-in-houston-tx/",
-    status: "TRACKING", ddStatus: "Not Started", isNew: true,
-    notes: "BizQuest listing \u2014 $1.3M, 11,150 SF self-storage in Houston 77067 (Greenspoint/North Houston area). Address undisclosed. POTENTIAL FIT \u2014 within $1-4M range and in Houston target zone. NEEDS: Contact BizQuest broker for address, unit count, financials, occupancy. Verify enclosed facility type.",
-    docs: [], financials: null
-  },
-  {
-    id: 33, address: "4650 FM 2351 Rd", city: "Friendswood", state: "TX", zip: "77546", zone: "Houston",
-    price: 453150, units: null, sqft: 1875, capRate: null, facilityType: "Self-Storage (Small)",
-    occupancy: null, operator: "Unknown", source: "CityFeet",
-    sourceUrl: "https://www.cityfeet.com/cont/houston-tx/storage-facilities-for-sale",
-    status: "DEAD", ddStatus: "Complete", isNew: true,
-    notes: "DEAD \u2014 Too small. $453K, only 1,875 SF. Not a viable acquisition target. Friendswood (Galveston County border). Logged for market awareness only.",
-    docs: [], financials: null
-  }
-
 ];
-const DD_STATUSES = ["Not Started", "Pending", "In Progress", "Financials Requested", "Complete", "Overpriced"];
-const PROPERTY_STATUSES = ["NEW", "STRONG", "TRACKING", "DD REVIEWED", "DEAD"];
-const DOC_TYPES = ["OM", "P&L", "Rent Roll", "T-12", "Photos", "Inspection", "Appraisal", "LOI"];
 
-function formatPrice(price) {
-  if (!price) return "Price Upon Request";
-  if (price >= 1000000) return "$" + (price / 1000000).toFixed(price % 1000000 === 0 ? 0 : 2) + "M";
-  return "$" + price.toLocaleString();
-}
-function formatSqft(sqft) { return sqft ? sqft.toLocaleString() + " SF" : ""; }
-function formatDollars(n) { return n ? "$" + n.toLocaleString() : "\u2014"; }
-function formatPct(n) { return n != null ? n.toFixed(2) + "%" : "\u2014"; }
+const formatPrice = (p) => {
+  if (!p) return "Price Upon Request";
+  if (p >= 1000000) return `$${(p / 1000000).toFixed(2)}M`;
+  return `$${(p / 1000).toFixed(0)}K`;
+};
 
-function StatusBadge({ status }) {
-  const colors = {
-    "STRONG": "bg-green-100 text-green-800 border-green-300",
-    "NEW": "bg-blue-100 text-blue-800 border-blue-300",
-    "TRACKING": "bg-yellow-100 text-yellow-800 border-yellow-300",
-    "DD REVIEWED": "bg-purple-100 text-purple-800 border-purple-300",
-    "DEAD": "bg-red-100 text-red-800 border-red-300",
-  };
-  return (
-    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold border ${colors[status] || "bg-gray-100 text-gray-700 border-gray-300"}`}>
-      {status}
-    </span>
-  );
-}
+const formatSqft = (s) => {
+  if (!s) return "â";
+  return `${s.toLocaleString()} SF`;
+};
 
-function DocsBadge({ docs }) {
-  if (!docs || docs.length === 0) return (
-    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs bg-gray-100 text-gray-400 border border-gray-200" title="No documents on file">
-      <span style={{fontSize:"10px"}}>&#128196;</span> None
-    </span>
-  );
-  const names = docs.map(d => typeof d === "string" ? d : d.type);
-  return (
-    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs bg-teal-50 text-teal-700 border border-teal-200 font-medium" title={names.join(", ")}>
-      <span style={{fontSize:"10px"}}>&#9989;</span> {names.join(", ")}
-    </span>
-  );
-}
+const statusColors = {
+  STRONG: { bg: "#dcfce7", text: "#166534", border: "#86efac" },
+  NEW: { bg: "#fef3c7", text: "#92400e", border: "#fcd34d" },
+  TRACKING: { bg: "#dbeafe", text: "#1e40af", border: "#93c5fd" },
+  "DD REVIEWED": { bg: "#fce7f3", text: "#9d174d", border: "#f9a8d4" },
+};
 
-function DDStatusDropdown({ value, onChange }) {
-  const colors = {
-    "Not Started": "bg-gray-50 text-gray-600 border-gray-300",
-    "Pending": "bg-yellow-50 text-yellow-700 border-yellow-300",
-    "In Progress": "bg-blue-50 text-blue-700 border-blue-300",
-    "Financials Requested": "bg-orange-50 text-orange-700 border-orange-300",
-    "Complete": "bg-green-50 text-green-700 border-green-300",
-    "Overpriced": "bg-red-50 text-red-700 border-red-300",
-  };
-  return (
-    <select value={value} onChange={(e) => onChange(e.target.value)}
-      className={`text-xs font-medium rounded px-2 py-1 border cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-400 ${colors[value] || ""}`}>
-      {DD_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-    </select>
-  );
-}
+const ddStatusColors = {
+  "Not Started": "#94a3b8",
+  Pending: "#f59e0b",
+  "In Progress": "#3b82f6",
+  "Financials Requested": "#8b5cf6",
+  Complete: "#22c55e",
+  Overpriced: "#ef4444",
+};
 
-function FinancialSummary({ f, price }) {
-  if (!f) return null;
-  return (
-    <div className="mt-3 bg-white rounded-lg border border-teal-200 p-3">
-      <h4 className="text-xs font-bold text-teal-800 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-        <span>&#128200;</span> Financial Summary (from OM)
-      </h4>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 text-xs">
-        <div><span className="text-gray-400">Ask Price:</span> <span className="font-semibold text-gray-800">{formatDollars(price)}</span></div>
-        <div><span className="text-gray-400">Current NOI:</span> <span className="font-semibold text-gray-800">{formatDollars(f.noi)}</span></div>
-        <div><span className="text-gray-400">Current Cap:</span> <span className="font-semibold text-gray-800">{formatPct(price && f.noi ? (f.noi/price)*100 : null)}</span></div>
-        <div><span className="text-gray-400">Gross Revenue:</span> <span className="font-semibold text-gray-800">{formatDollars(f.grossRevenue)}</span></div>
-        <div><span className="text-gray-400">GR Payback:</span> <span className={`font-semibold ${f.grossRevenuePayback >= 7 && f.grossRevenuePayback <= 9 ? "text-green-700" : "text-orange-600"}`}>{f.grossRevenuePayback ? f.grossRevenuePayback.toFixed(1) + " yrs" : "\u2014"}</span></div>
-        <div><span className="text-gray-400">Pro Forma NOI:</span> <span className="font-semibold text-teal-700">{formatDollars(f.proFormaNoi)}</span></div>
-        <div><span className="text-gray-400">Pro Forma Cap:</span> <span className="font-semibold text-teal-700">{formatPct(f.proFormaCapRate)}</span></div>
-        <div><span className="text-gray-400">Expense Ratio:</span> <span className="font-semibold text-gray-800">{formatPct(f.expenseRatio)}</span></div>
-        <div><span className="text-gray-400">NRSF:</span> <span className="font-semibold text-gray-800">{f.nrsf ? f.nrsf.toLocaleString() : "\u2014"}</span></div>
-        <div><span className="text-gray-400">$/SF:</span> <span className="font-semibold text-gray-800">{f.pricePerSF ? "$" + f.pricePerSF.toFixed(2) : "\u2014"}</span></div>
-        <div><span className="text-gray-400">Year Built:</span> <span className="font-semibold text-gray-800">{f.yearBuilt || "\u2014"}</span></div>
-        <div><span className="text-gray-400">Buildings:</span> <span className="font-semibold text-gray-800">{f.buildings || "\u2014"}</span></div>
-        <div><span className="text-gray-400">Unit Occ:</span> <span className="font-semibold text-gray-800">{formatPct(f.occupancyUnit)}</span></div>
-        <div><span className="text-gray-400">SF Occ:</span> <span className="font-semibold text-gray-800">{formatPct(f.occupancySF)}</span></div>
-        <div><span className="text-gray-400">Econ Occ:</span> <span className="font-semibold text-gray-800">{formatPct(f.occupancyEcon)}</span></div>
-        <div><span className="text-gray-400">Yr 5 NOI:</span> <span className="font-semibold text-teal-700">{formatDollars(f.yr5Noi)}</span></div>
-      </div>
-      {f.broker && <div className="mt-2 text-xs text-gray-400">Broker: {f.broker}</div>}
-    </div>
-  );
-}
-
-function DDChecklist({ docs }) {
-  const coreDocs = ["OM", "Rent Roll", "T-12", "P&L"];
-  const getDoc = (type) => docs && docs.find(d => (typeof d === "string" ? d : d.type) === type);
-  const hasDoc = (type) => !!getDoc(type);
-  const coreCount = coreDocs.filter(hasDoc).length;
-  const pct = Math.round((coreCount / coreDocs.length) * 100);
-
-  return (
-    <div className="mt-3 bg-white rounded-lg border border-gray-200 p-3">
-      <div className="flex items-center justify-between mb-2">
-        <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wide">DD Document Checklist</h4>
-        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-          pct === 100 ? "bg-green-100 text-green-700" :
-          pct >= 50 ? "bg-yellow-100 text-yellow-700" :
-          "bg-gray-100 text-gray-500"
-        }`}>{pct}% Core</span>
-      </div>
-      <div>
-        {coreDocs.map(type => {
-          const doc = getDoc(type);
-          const url = doc && typeof doc === "object" ? doc.url : null;
-          return (
-          <div key={type} className={`flex items-center gap-1.5 py-0.5 text-xs ${doc ? "text-emerald-700" : "text-gray-400"}`}>
-            <span style={{fontSize:"11px"}}>{doc ? "\u2705" : "\u274C"}</span>
-            {url ? (
-              <a href={url} target="_blank" rel="noopener noreferrer" className="underline hover:text-emerald-900 cursor-pointer">{type}</a>
-            ) : (
-              <span>{type}</span>
-            )}
-          </div>);
-        })}
-      </div>
-    </div>
-  );
-}
-
-function DealComparison({ properties }) {
-  const withFinancials = properties.filter(p => p.financials && p.price);
-  if (withFinancials.length === 0) return null;
-
-  const [offerPrices, setOfferPrices] = React.useState({});
-  const [useOfferMode, setUseOfferMode] = React.useState(false);
-
-  const setOffer = (id, val) => {
-    setOfferPrices(prev => ({ ...prev, [id]: val }));
-  };
-
-  function scoreProperty(p, effectivePrice) {
-    const f = p.financials;
-    let score = 0;
-    const grPayback = f.grossRevenue && f.grossRevenue > 0 ? effectivePrice / f.grossRevenue : null;
-    const proFormaCap = f.proFormaNoi ? (f.proFormaNoi / effectivePrice) * 100 : null;
-    const currentCap = f.noi && f.noi > 0 ? (f.noi / effectivePrice) * 100 : null;
-    // GR Payback (30 pts)
-    if (grPayback) {
-      if (grPayback >= 7 && grPayback <= 9) score += 25;
-      else if (grPayback < 7) score += 30;
-      else score += Math.max(0, 20 - (grPayback - 9) * 3);
-    }
-    // Pro forma cap (20 pts)
-    if (proFormaCap) score += Math.min(20, proFormaCap * 2);
-    // Current cap (15 pts)
-    if (currentCap && currentCap > 0) score += Math.min(15, currentCap * 2);
-    // Occupancy (15 pts)
-    const occ = f.occupancyUnit || 0;
-    if (occ >= 85) score += 15; else if (occ >= 70) score += 10; else if (occ >= 50) score += 5;
-    // Deal size fit (10 pts)
-    if (effectivePrice >= 1000000 && effectivePrice <= 2500000) score += 10;
-    else if (effectivePrice >= 2500000 && effectivePrice <= 4000000) score += 5;
-    // Upside (10 pts)
-    if (f.noi && f.noi > 0 && f.proFormaNoi) score += Math.min(10, ((f.proFormaNoi - f.noi) / f.noi) * 100 * 0.15);
-    return { score: Math.round(score), grPayback, proFormaCap, currentCap };
-  }
-
-  const scored = withFinancials.map(p => {
-    const effectivePrice = useOfferMode && offerPrices[p.id] ? parseInt(offerPrices[p.id]) : p.price;
-    const r = scoreProperty(p, effectivePrice);
-    return { ...p, effectivePrice, dealScore: r.score, adjGrPayback: r.grPayback, adjProFormaCap: r.proFormaCap, adjCurrentCap: r.currentCap };
-  }).sort((a, b) => b.dealScore - a.dealScore);
-
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-teal-200 p-4 sm:p-5 mb-4">
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-        <h2 className="text-sm font-bold text-teal-900 uppercase tracking-wide flex items-center gap-2">
-          <span>&#127942;</span> Deal Comparison (Properties with Financials)
-        </h2>
-        <button
-          onClick={() => setUseOfferMode(!useOfferMode)}
-          className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all ${useOfferMode ? "bg-teal-600 text-white border-teal-600 shadow-sm" : "bg-white text-teal-700 border-teal-300 hover:bg-teal-50"}`}
-        >
-          {useOfferMode ? "\u2705 Offer Mode ON" : "\uD83D\uDCB0 Offer Mode"}
-        </button>
-      </div>
-      {useOfferMode && (
-        <div className="bg-teal-50 border border-teal-200 rounded-lg p-3 mb-3">
-          <p className="text-xs text-teal-700 mb-2 font-medium">Enter your offer price \u2014 scores and metrics recalculate live:</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-            {withFinancials.map(p => (
-              <div key={p.id} className="flex items-center gap-2">
-                <span className="text-xs text-gray-600 truncate" style={{minWidth:"80px",maxWidth:"110px"}}>{p.city}</span>
-                <span className="text-gray-300 text-xs">$</span>
-                <input type="number" placeholder={p.price ? p.price.toLocaleString() : "0"} value={offerPrices[p.id] || ""}
-                  onChange={e => setOffer(p.id, e.target.value)}
-                  className="flex-1 text-xs border border-gray-300 rounded px-2 py-1 focus:border-teal-500 focus:ring-1 focus:ring-teal-200 outline-none" style={{maxWidth:"120px"}} />
-                {offerPrices[p.id] && p.price ? (
-                  <span className="text-xs font-semibold text-red-500">{((1 - parseInt(offerPrices[p.id]) / p.price) * 100).toFixed(0)}% off</span>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs">
-          <thead>
-            <tr className="border-b border-gray-200">
-              <th className="text-left py-2 pr-3 text-gray-500 font-medium">Rank</th>
-              <th className="text-left py-2 pr-3 text-gray-500 font-medium">Property</th>
-              <th className="text-right py-2 pr-3 text-gray-500 font-medium">{useOfferMode ? "Offer" : "Price"}</th>
-              <th className="text-right py-2 pr-3 text-gray-500 font-medium">Target Price</th>
-              <th className="text-right py-2 pr-3 text-gray-500 font-medium">Occ</th>
-              <th className="text-right py-2 pr-3 text-gray-500 font-medium">Current NOI</th>
-              <th className="text-right py-2 pr-3 text-gray-500 font-medium">Cap Rate</th>
-              <th className="text-right py-2 pr-3 text-gray-500 font-medium">GR Payback</th>
-              <th className="text-right py-2 pr-3 text-gray-500 font-medium">PF NOI</th>
-              <th className="text-right py-2 pr-3 text-gray-500 font-medium">PF Cap</th>
-              <th className="text-right py-2 pr-3 text-gray-500 font-medium">Upside</th>
-              <th className="text-right py-2 text-gray-500 font-medium">Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {scored.map((p, i) => {
-              const f = p.financials;
-              const upside = f.noi && f.noi > 0 && f.proFormaNoi ? (((f.proFormaNoi - f.noi) / f.noi) * 100) : null;
-              const hasOffer = useOfferMode && offerPrices[p.id];
-              return (
-                <tr key={p.id} className={`border-b border-gray-100 hover:bg-gray-50 ${i === 0 ? "bg-teal-50/40" : ""}`}>
-                  <td className="py-2.5 pr-3">
-                    <span className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${i === 0 ? "bg-teal-600 text-white" : "bg-gray-200 text-gray-600"}`}>
-                      {i + 1}
-                    </span>
-                  </td>
-                  <td className="py-2.5 pr-3">
-                    {(() => {
-                      const omDoc = p.docs && p.docs.find(d => d.type === "OM" && d.url);
-                      return omDoc ? (
-                        <a href={omDoc.url} target="_blank" rel="noopener noreferrer" className="group">
-                          <div className="font-semibold text-gray-900 group-hover:text-teal-700 transition-colors">{p.address} <span className="text-teal-500 text-xs opacity-0 group-hover:opacity-100 transition-opacity">&#x2197;</span></div>
-                          <div className="text-gray-400">{p.city}, {p.state}</div>
-                        </a>
-                      ) : (
-                        <div>
-                          <div className="font-semibold text-gray-900">{p.address}</div>
-                          <div className="text-gray-400">{p.city}, {p.state}</div>
-                        </div>
-                      );
-                    })()}
-                  </td>
-                  <td className="py-2.5 pr-3 text-right">
-                    {hasOffer ? (
-                      <div>
-                        <span className="line-through text-gray-400">{formatPrice(p.price)}</span>
-                        <div className="font-bold text-teal-700">{formatPrice(p.effectivePrice)}</div>
-                      </div>
-                    ) : (
-                      <span className="font-semibold text-gray-900">{formatPrice(p.price)}</span>
-                    )}
-                  </td>
-                  <td className="py-2.5 pr-3 text-right">
-                    {(() => {
-                      const gr = f.grossRevenue && f.grossRevenue > 0 ? f.grossRevenue : (f.proFormaGrossRevenue || null);
-                      if (!gr) return <span className="text-gray-400">{"\u2014"}</span>;
-                      const target = gr * 8;
-                      const diff = ((p.price - target) / p.price * 100);
-                      return (
-                        <div>
-                          <div className="font-bold text-teal-700">{formatPrice(target)}</div>
-                          <div className={`text-xs ${diff > 0 ? "text-red-400" : "text-emerald-500"}`}>
-                            {diff > 0 ? diff.toFixed(0) + "% over" : Math.abs(diff).toFixed(0) + "% under"}
-                          </div>
-                        </div>
-                      );
-                    })()}
-                  </td>
-                  <td className={`py-2.5 pr-3 text-right font-semibold ${(f.occupancyUnit || 0) >= 80 ? "text-green-700" : (f.occupancyUnit || 0) >= 50 ? "text-yellow-600" : "text-red-500"}`}>
-                    {p.occupancy || "\u2014"}
-                  </td>
-                  <td className={`py-2.5 pr-3 text-right ${f.noi && f.noi < 0 ? "text-red-500" : "text-gray-700"}`}>{f.noi ? (f.noi < 0 ? "-" + formatDollars(Math.abs(f.noi)) : formatDollars(f.noi)) : "\u2014"}</td>
-                  <td className="py-2.5 pr-3 text-right text-gray-700">{p.adjCurrentCap && p.adjCurrentCap > 0 ? p.adjCurrentCap.toFixed(2) + "%" : "\u2014"}</td>
-                  <td className={`py-2.5 pr-3 text-right font-semibold ${p.adjGrPayback && p.adjGrPayback >= 7 && p.adjGrPayback <= 9 ? "text-green-700" : p.adjGrPayback && p.adjGrPayback < 7 ? "text-emerald-700" : "text-orange-600"}`}>
-                    {p.adjGrPayback ? p.adjGrPayback.toFixed(1) + "yr" : "\u2014"}
-                  </td>
-                  <td className="py-2.5 pr-3 text-right font-semibold text-teal-700">{formatDollars(f.proFormaNoi)}</td>
-                  <td className="py-2.5 pr-3 text-right font-semibold text-teal-700">{p.adjProFormaCap ? p.adjProFormaCap.toFixed(2) + "%" : "\u2014"}</td>
-                  <td className="py-2.5 pr-3 text-right font-semibold text-emerald-600">{upside ? "+" + upside.toFixed(0) + "%" : "\u2014"}</td>
-                  <td className="py-2.5 text-right">
-                    <span className={`inline-flex px-2 py-0.5 rounded-full font-bold ${p.dealScore >= 70 ? "bg-teal-100 text-teal-800" : p.dealScore >= 50 ? "bg-yellow-100 text-yellow-800" : "bg-gray-100 text-gray-600"}`}>
-                      {p.dealScore}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      {withFinancials.length === 1 && (
-        <p className="text-xs text-gray-400 mt-3 italic">Upload OMs for more properties to compare deals side by side.</p>
-      )}
-    </div>
-  );
-}
+const zoneColors = {
+  Houston: { bg: "#eff6ff", accent: "#3b82f6" },
+  Dallas: { bg: "#fdf2f8", accent: "#ec4899" },
+};
 
 function StorageDashboard() {
-  const [properties, setProperties] = useState(initialProperties);
   const [zoneFilter, setZoneFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
   const [sortBy, setSortBy] = useState("status");
+  const [ddStatuses, setDdStatuses] = useState(() => {
+    const initial = {};
+    properties.forEach((p) => (initial[p.id] = p.ddStatus));
+    return initial;
+  });
   const [expandedId, setExpandedId] = useState(null);
-  const [showDead, setShowDead] = useState(false);
-
-  const updateDDStatus = (id, newStatus) => {
-    setProperties(prev => prev.map(p => p.id === id ? { ...p, ddStatus: newStatus } : p));
-  };
-
-  const statusOrder = { "STRONG": 0, "NEW": 1, "TRACKING": 2, "DD REVIEWED": 3 };
 
   const filtered = useMemo(() => {
-    let result = [...properties];
-    if (!showDead && statusFilter !== "DEAD") result = result.filter(p => p.status !== "DEAD");
-    if (zoneFilter !== "All") result = result.filter(p => p.zone === zoneFilter);
-    if (statusFilter !== "All") result = result.filter(p => p.status === statusFilter);
+    let result = properties.filter((p) => {
+      if (zoneFilter !== "All" && p.zone !== zoneFilter) return false;
+      if (statusFilter !== "All" && p.status !== statusFilter) return false;
+      return true;
+    });
+
+    const statusOrder = { STRONG: 0, NEW: 1, TRACKING: 2, "DD REVIEWED": 3 };
     result.sort((a, b) => {
-      if (sortBy === "status") return (statusOrder[a.status] ?? 99) - (statusOrder[b.status] ?? 99);
-      if (sortBy === "price") return (a.price || Infinity) - (b.price || Infinity);
+      if (sortBy === "status")
+        return (statusOrder[a.status] ?? 9) - (statusOrder[b.status] ?? 9);
+      if (sortBy === "price") return (b.price || 0) - (a.price || 0);
       if (sortBy === "zone") return a.zone.localeCompare(b.zone);
-      if (sortBy === "sqft") return (b.sqft || 0) - (a.sqft || 0);
       return 0;
     });
     return result;
-  }, [properties, zoneFilter, statusFilter, sortBy, showDead]);
+  }, [zoneFilter, statusFilter, sortBy]);
 
-  const stats = useMemo(() => ({
-    total: properties.length,
-    newCount: properties.filter(p => p.isNew).length,
-    strong: properties.filter(p => p.status === "STRONG").length,
-    inBudget: properties.filter(p => p.price && p.price >= 1000000 && p.price <= 4000000).length,
-    withDocs: properties.filter(p => p.docs && p.docs.length > 0).length,
-    withFinancials: properties.filter(p => p.financials).length,
-  }), [properties]);
+  const stats = useMemo(() => {
+    const total = properties.length;
+    const newCount = properties.filter((p) => p.isNew).length;
+    const strong = properties.filter((p) => p.status === "STRONG").length;
+    const inBudget = properties.filter(
+      (p) => p.price && p.price >= 1000000 && p.price <= 4000000
+    ).length;
+    const houston = properties.filter((p) => p.zone === "Houston").length;
+    const dallas = properties.filter((p) => p.zone === "Dallas").length;
+    return { total, newCount, strong, inBudget, houston, dallas };
+  }, []);
+
+  const priorityActions = [
+    {
+      priority: 1,
+      action: "Investigate 3020 Duncanville Rd, Dallas â Insure Self Storage",
+      reason: "NEW 172-unit facility with below-market rents. Strong value-add potential. CBRE listed. Request pricing and financials.",
+      urgency: "high",
+    },
+    {
+      priority: 2,
+      action: "Follow up on Dallas 258-unit deal (6.11% cap + seller financing)",
+      reason: "Strong lead with seller financing â financials requested, need follow-up",
+      urgency: "high",
+    },
+    {
+      priority: 3,
+      action: "Request pricing on 2319-2323 Preston Ave, Pasadena",
+      reason: "29,724 SF self-storage â need price to assess $1-4M fit. Found 4/11, still listed.",
+      urgency: "high",
+    },
+    {
+      priority: 4,
+      action: "Request pricing on 522 Crenshaw Rd, Pasadena",
+      reason: "28,200 SF self-storage with boat/mini combo â need price to assess. Found 4/11.",
+      urgency: "medium",
+    },
+    {
+      priority: 5,
+      action: "Revisit 309 W Archer Rd, Baytown â price confirmed at $2.1M",
+      reason: "Price still at $2.1M (down from $2.2M), cap rate 6.33%. In strike zone.",
+      urgency: "medium",
+    },
+    {
+      priority: 6,
+      action: "Continue DD on $1.8M two-building Dallas facility (94-100% occ)",
+      reason: "Strong occupancy, good price point. Needs financials verification.",
+      urgency: "medium",
+    },
+    {
+      priority: 7,
+      action: "Evaluate 2601 Willowbrook Rd, Dallas ($3.63M, 280 units)",
+      reason: "US Storage Centers operated. Strong candidate â start DD.",
+      urgency: "medium",
+    },
+  ];
+
+  const ddOptions = [
+    "Not Started",
+    "Pending",
+    "In Progress",
+    "Financials Requested",
+    "Complete",
+    "Overpriced",
+  ];
+
+  const scanNotes = [
+    "Crexi now redirects to LoopNet (CoStar merger) â consolidated into single search",
+    "LoopNet Harris County: 14 listings (confirmed), Dallas County: 2 listings (free tier)",
+    "CoStar paywall may hide additional listings â 3020 Duncanville Rd found via premium data",
+    "Conroe, Spring, Tomball corridor: no qualifying self-storage listings found",
+    "2319 Preston Ave & 522 Crenshaw Rd (Pasadena) moved from NEW â TRACKING",
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-3 sm:p-6" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
+    <div
+      style={{
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        maxWidth: 1200,
+        margin: "0 auto",
+        padding: 24,
+        background: "#f8fafc",
+        minHeight: "100vh",
+      }}
+    >
       {/* Header */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 mb-4">
-        <div className="flex items-center justify-between flex-wrap gap-2">
+      <div style={{ marginBottom: 24 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            flexWrap: "wrap",
+            gap: 12,
+          }}
+        >
           <div>
-            <h1 className="text-lg sm:text-xl font-bold text-gray-900">Self-Storage Acquisition Scanner</h1>
-            <p className="text-xs sm:text-sm text-gray-500 mt-0.5">Scan: {SCAN_DATE} &middot; Prev: {PREV_SCAN_DATE} &middot; Houston & Dallas Zones &middot; $1-4M &middot; Enclosed</p>
+            <h1
+              style={{
+                fontSize: 28,
+                fontWeight: 700,
+                color: "#0f172a",
+                margin: 0,
+              }}
+            >
+              Self-Storage Acquisition Tracker
+            </h1>
+            <p style={{ color: "#64748b", margin: "4px 0 0", fontSize: 14 }}>
+              Last scan: {SCAN_DATE} (prev: {PREV_SCAN_DATE}) | Criteria: Enclosed, $1-4M, 7-9yr gross revenue payback
+            </p>
           </div>
-          <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 border border-green-200 rounded-full px-3 py-1 text-xs font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-            Scan Complete
-          </span>
+          <div
+            style={{
+              background: "#fff",
+              border: "1px solid #e2e8f0",
+              borderRadius: 8,
+              padding: "8px 14px",
+              fontSize: 13,
+              color: "#475569",
+            }}
+          >
+            Sources: Crexi/LoopNet Â· CityFeet Â· BizQuest Â· HAR Â· TXSSA
+          </div>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-3 mb-4">
+      {/* Stats Row */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+          gap: 12,
+          marginBottom: 24,
+        }}
+      >
         {[
-          { label: "Total Tracked", value: stats.total, bg: "bg-white", color: "text-gray-900" },
-          { label: "New This Scan", value: stats.newCount, bg: "bg-blue-50 border-blue-200", color: "text-blue-700", prefix: "\ud83c\udd95 " },
-          { label: "Strong Leads", value: stats.strong, bg: "bg-green-50 border-green-200", color: "text-green-700" },
-          { label: "In Budget", value: stats.inBudget, bg: "bg-emerald-50 border-emerald-200", color: "text-emerald-700" },
-          { label: "Docs on File", value: stats.withDocs, bg: "bg-teal-50 border-teal-200", color: "text-teal-700" },
-          { label: "Financials", value: stats.withFinancials, bg: "bg-cyan-50 border-cyan-200", color: "text-cyan-700" },
-        ].map((stat, i) => (
-          <div key={i} className={`rounded-lg border p-3 text-center ${stat.bg}`}>
-            <div className={`text-xl sm:text-2xl font-bold ${stat.color}`}>{stat.prefix || ""}{stat.value}</div>
-            <div className="text-xs text-gray-500 mt-0.5">{stat.label}</div>
+          {
+            label: "Total Tracked",
+            value: stats.total,
+            color: "#3b82f6",
+            bg: "#eff6ff",
+          },
+          {
+            label: "New This Scan",
+            value: stats.newCount,
+            color: "#f59e0b",
+            bg: "#fffbeb",
+            icon: "ð",
+          },
+          {
+            label: "Strong Leads",
+            value: stats.strong,
+            color: "#22c55e",
+            bg: "#f0fdf4",
+          },
+          {
+            label: "In Budget ($1-4M)",
+            value: stats.inBudget,
+            color: "#8b5cf6",
+            bg: "#f5f3ff",
+          },
+          {
+            label: "Houston Zone",
+            value: stats.houston,
+            color: "#3b82f6",
+            bg: "#eff6ff",
+          },
+          {
+            label: "Dallas Zone",
+            value: stats.dallas,
+            color: "#ec4899",
+            bg: "#fdf2f8",
+          },
+        ].map((s, i) => (
+          <div
+            key={i}
+            style={{
+              background: s.bg,
+              borderRadius: 10,
+              padding: "14px 16px",
+              textAlign: "center",
+            }}
+          >
+            <div style={{ fontSize: 28, fontWeight: 700, color: s.color }}>
+              {s.icon && <span style={{ marginRight: 4 }}>{s.icon}</span>}
+              {s.value}
+            </div>
+            <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>
+              {s.label}
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Priority Actions This Week */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-5 mb-4">
-        <h2 className="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-red-500"></span>
+      {/* Scan Notes */}
+      <div
+        style={{
+          background: "#fffbeb",
+          border: "1px solid #fcd34d",
+          borderRadius: 10,
+          padding: "14px 18px",
+          marginBottom: 20,
+          fontSize: 13,
+          color: "#92400e",
+        }}
+      >
+        <div style={{ fontWeight: 600, marginBottom: 6 }}>Scan Notes â {SCAN_DATE}</div>
+        {scanNotes.map((note, i) => (
+          <div key={i} style={{ marginBottom: 3, paddingLeft: 12, position: "relative" }}>
+            <span style={{ position: "absolute", left: 0 }}>â¢</span> {note}
+          </div>
+        ))}
+      </div>
+
+      {/* Priority Actions */}
+      <div
+        style={{
+          background: "#fff",
+          border: "1px solid #e2e8f0",
+          borderRadius: 12,
+          padding: 20,
+          marginBottom: 24,
+        }}
+      >
+        <h2
+          style={{
+            fontSize: 18,
+            fontWeight: 600,
+            color: "#0f172a",
+            margin: "0 0 14px",
+          }}
+        >
           Priority Actions This Week
         </h2>
-        <div className="space-y-2">
-          {[
-            { p: 1, text: "Get pricing on 5611 S Rice Ave (Community Self Storage) \u2014 Class A, Houston", tag: "NEW", c: "text-blue-700" },
-            { p: 2, text: "Browse LoopNet Magnolia page \u2014 4 listings need addresses and pricing extracted", tag: "NEW", c: "text-blue-700" },
-            { p: 3, text: "Call Texas Storage Investors (936-520-2721) re: Sentinel Rosharon 90K SF", tag: "NEW", c: "text-blue-700" },
-            { p: 4, text: "Follow up with Dominus Commercial on 13950 C F Hawn Fwy OM \u2014 817-242-2361", tag: "TRACKING", c: "text-yellow-700" },
-            { p: 5, text: "Call Blake Baker on 522 Crenshaw Rd pricing \u2014 832-289-2176", tag: "TRACKING", c: "text-yellow-700" },
-            { p: 6, text: "Request financials on 2601 Willowbrook Rd (Dallas, 280 units) \u2014 still active", tag: "STRONG", c: "text-green-700" },
-            { p: 7, text: "Advance DD on Lane Prairie (Joshua) \u2014 8.49% cap, 92% occ, Amazon catalyst", tag: "STRONG", c: "text-green-700" },
-          ].map(item => (
-            <div key={item.p} className="flex items-start gap-3 text-xs">
-              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-gray-100 text-gray-600 font-bold flex items-center justify-center text-xs">{item.p}</span>
-              <span className="flex-1 text-gray-700 leading-relaxed">{item.text}</span>
-              <span className={`flex-shrink-0 text-xs font-semibold ${item.c}`}>{item.tag}</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {priorityActions.map((a) => (
+            <div
+              key={a.priority}
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 12,
+                padding: "10px 14px",
+                background: a.urgency === "high" ? "#fef2f2" : "#fffbeb",
+                borderRadius: 8,
+                borderLeft: `4px solid ${a.urgency === "high" ? "#ef4444" : "#f59e0b"}`,
+              }}
+            >
+              <span
+                style={{
+                  background: a.urgency === "high" ? "#ef4444" : "#f59e0b",
+                  color: "#fff",
+                  borderRadius: "50%",
+                  width: 24,
+                  height: 24,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  flexShrink: 0,
+                }}
+              >
+                {a.priority}
+              </span>
+              <div>
+                <div style={{ fontWeight: 600, fontSize: 14, color: "#0f172a" }}>
+                  {a.action}
+                </div>
+                <div style={{ fontSize: 13, color: "#64748b", marginTop: 2 }}>
+                  {a.reason}
+                </div>
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Deal Comparison */}
-      <DealComparison properties={properties} />
-
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 mb-4">
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Zone</span>
-            {["All", "Houston", "Dallas", "Other"].map(z => (
-              <button key={z} onClick={() => setZoneFilter(z)}
-                className={`px-2.5 py-1 text-xs rounded-full font-medium border transition-all ${
-                  zoneFilter === z ? "bg-gray-800 text-white border-gray-800 shadow-sm" : "bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-700"
-                }`}>{z}</button>
-            ))}
-          </div>
-          <span className="hidden sm:block w-px h-5 bg-gray-200" />
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Status</span>
-            {["All", ...PROPERTY_STATUSES].map(s => (
-              <button key={s} onClick={() => setStatusFilter(s)}
-                className={`px-2.5 py-1 text-xs rounded-full font-medium border transition-all ${
-                  statusFilter === s ? "bg-gray-800 text-white border-gray-800 shadow-sm" : "bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-700"
-                }`}>{s}</button>
-            ))}
-          </div>
-          <span className="hidden sm:block w-px h-5 bg-gray-200" />
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-medium text-gray-400 uppercase tracking-wide">Sort</span>
-            <select value={sortBy} onChange={e => setSortBy(e.target.value)}
-              className="text-xs border border-gray-200 rounded-lg px-2 py-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-400">
-              <option value="status">Priority</option>
-              <option value="price">Price</option>
-              <option value="zone">Zone</option>
-              <option value="sqft">Size</option>
-            </select>
-          </div>
-          <label className="flex items-center gap-1.5 cursor-pointer ml-2">
-            <input type="checkbox" checked={showDead} onChange={() => setShowDead(!showDead)} className="rounded border-gray-300" />
-            <span className="text-xs text-gray-500">Show Dead</span>
-          </label>
-          <div className="ml-auto text-xs text-gray-400">{filtered.length}/{properties.length}</div>
+      <div
+        style={{
+          display: "flex",
+          gap: 12,
+          marginBottom: 16,
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ display: "flex", gap: 6 }}>
+          <span
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#475569",
+              alignSelf: "center",
+              marginRight: 4,
+            }}
+          >
+            Zone:
+          </span>
+          {["All", "Houston", "Dallas"].map((z) => (
+            <button
+              key={z}
+              onClick={() => setZoneFilter(z)}
+              style={{
+                padding: "6px 14px",
+                borderRadius: 6,
+                border: "1px solid",
+                borderColor: zoneFilter === z ? "#3b82f6" : "#e2e8f0",
+                background: zoneFilter === z ? "#3b82f6" : "#fff",
+                color: zoneFilter === z ? "#fff" : "#475569",
+                fontSize: 13,
+                fontWeight: 500,
+                cursor: "pointer",
+              }}
+            >
+              {z}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: 6 }}>
+          <span
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#475569",
+              alignSelf: "center",
+              marginRight: 4,
+            }}
+          >
+            Status:
+          </span>
+          {["All", "NEW", "STRONG", "TRACKING", "DD REVIEWED"].map((s) => (
+            <button
+              key={s}
+              onClick={() => setStatusFilter(s)}
+              style={{
+                padding: "6px 14px",
+                borderRadius: 6,
+                border: "1px solid",
+                borderColor:
+                  statusFilter === s
+                    ? statusColors[s]?.border || "#3b82f6"
+                    : "#e2e8f0",
+                background:
+                  statusFilter === s
+                    ? statusColors[s]?.bg || "#eff6ff"
+                    : "#fff",
+                color:
+                  statusFilter === s
+                    ? statusColors[s]?.text || "#1e40af"
+                    : "#475569",
+                fontSize: 13,
+                fontWeight: 500,
+                cursor: "pointer",
+              }}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+        <div style={{ display: "flex", gap: 6, marginLeft: "auto" }}>
+          <span
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#475569",
+              alignSelf: "center",
+              marginRight: 4,
+            }}
+          >
+            Sort:
+          </span>
+          {[
+            { key: "status", label: "Status" },
+            { key: "price", label: "Price" },
+            { key: "zone", label: "Zone" },
+          ].map((s) => (
+            <button
+              key={s.key}
+              onClick={() => setSortBy(s.key)}
+              style={{
+                padding: "6px 14px",
+                borderRadius: 6,
+                border: "1px solid",
+                borderColor: sortBy === s.key ? "#3b82f6" : "#e2e8f0",
+                background: sortBy === s.key ? "#3b82f6" : "#fff",
+                color: sortBy === s.key ? "#fff" : "#475569",
+                fontSize: 13,
+                fontWeight: 500,
+                cursor: "pointer",
+              }}
+            >
+              {s.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Property Cards */}
-      <div className="space-y-2.5">
-        {filtered.map((p) => (
-          <div key={p.id}
-            className={`bg-white rounded-xl border shadow-sm overflow-hidden transition-all ${
-              p.isNew ? "border-blue-300 ring-1 ring-blue-100" : p.financials ? "border-teal-200" : "border-gray-200"
-            }`}>
-            <div className="p-3 sm:p-4 cursor-pointer hover:bg-gray-50/50 transition-colors" onClick={() => setExpandedId(expandedId === p.id ? null : p.id)}>
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 mb-1 flex-wrap">
-                    {p.isNew && <span className="text-sm" title="New this scan">{"\ud83c\udd95"}</span>}
-                    <StatusBadge status={p.status} />
-                    <span className="text-xs text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">{p.zone}</span>
-                    <DocsBadge docs={p.docs} />
-                  </div>
-                  <h3 className="font-semibold text-gray-900 text-sm leading-tight">{p.address}</h3>
-                  <p className="text-xs text-gray-500">{p.city}, {p.state} {p.zip}</p>
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <div className={`font-bold text-sm ${p.price ? "text-gray-900" : "text-gray-400 text-xs"}`}>{formatPrice(p.price)}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">
-                    {p.units ? <span>{p.units} units</span> : null}
-                    {p.units && p.sqft ? " \u00b7 " : ""}
-                    {p.sqft ? <span>{formatSqft(p.sqft)}</span> : null}
-                    {!p.units && !p.sqft ? <span className="text-gray-400">Details TBD</span> : null}
-                  </div>
-                  {p.capRate && <div className="text-xs text-green-600 font-semibold mt-0.5">{p.capRate}% Cap</div>}
-                </div>
-              </div>
-              <div className="flex items-center gap-2 mt-2 flex-wrap">
-                <span className="text-xs text-gray-500 bg-gray-50 px-1.5 py-0.5 rounded">{p.facilityType}</span>
-                {p.occupancy && <span className="text-xs text-gray-500">Occ: {p.occupancy}</span>}
-                <span className="text-xs text-gray-400 italic">via {p.source}</span>
-              </div>
-            </div>
+      {/* Results Count */}
+      <div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>
+        Showing {filtered.length} of {properties.length} properties
+      </div>
 
-            {expandedId === p.id && (
-              <div className="border-t border-gray-100 bg-gray-50 p-3 sm:p-4">
-                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs mb-3">
-                  <div><span className="text-gray-400">Operator:</span> <span className="font-medium text-gray-700">{p.operator || "Unknown"}</span></div>
-                  <div><span className="text-gray-400">Type:</span> <span className="font-medium text-gray-700">{p.facilityType}</span></div>
-                  <div><span className="text-gray-400">Occupancy:</span> <span className="font-medium text-gray-700">{p.occupancy || "Unknown"}</span></div>
-                  <div><span className="text-gray-400">Source:</span> <span className="font-medium text-gray-700">{p.source}</span></div>
+      {/* Property Cards */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {filtered.map((p) => {
+          const sc = statusColors[p.status] || statusColors.TRACKING;
+          const zc = zoneColors[p.zone] || zoneColors.Houston;
+          const expanded = expandedId === p.id;
+
+          return (
+            <div
+              key={p.id}
+              style={{
+                background: "#fff",
+                borderRadius: 12,
+                border: `1px solid ${p.isNew ? "#fcd34d" : "#e2e8f0"}`,
+                boxShadow: p.isNew
+                  ? "0 0 0 2px #fef3c7"
+                  : "0 1px 3px rgba(0,0,0,0.04)",
+                overflow: "hidden",
+              }}
+            >
+              {/* Main Row */}
+              <div
+                onClick={() => setExpandedId(expanded ? null : p.id)}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "auto 1fr auto auto auto auto",
+                  alignItems: "center",
+                  gap: 16,
+                  padding: "14px 18px",
+                  cursor: "pointer",
+                }}
+              >
+                {/* Zone Badge */}
+                <div
+                  style={{
+                    width: 4,
+                    height: 44,
+                    borderRadius: 2,
+                    background: zc.accent,
+                  }}
+                />
+
+                {/* Address + City */}
+                <div>
+                  <div
+                    style={{ display: "flex", alignItems: "center", gap: 8 }}
+                  >
+                    {p.isNew && <span style={{ fontSize: 14 }}>ð</span>}
+                    <span
+                      style={{
+                        fontWeight: 600,
+                        fontSize: 15,
+                        color: "#0f172a",
+                      }}
+                    >
+                      {p.address}
+                    </span>
+                    <span
+                      style={{
+                        background: sc.bg,
+                        color: sc.text,
+                        border: `1px solid ${sc.border}`,
+                        padding: "2px 8px",
+                        borderRadius: 4,
+                        fontSize: 11,
+                        fontWeight: 600,
+                      }}
+                    >
+                      {p.status}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      color: "#64748b",
+                      marginTop: 2,
+                    }}
+                  >
+                    {p.city} Â· {p.zone} Zone Â· {p.type}
+                    {p.source && (
+                      <span style={{ marginLeft: 8, color: "#94a3b8" }}>
+                        via {p.source}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div className="text-xs text-gray-600 bg-white rounded-lg border border-gray-200 p-2.5 leading-relaxed">
-                  <span className="font-semibold text-gray-700">Notes: </span>{p.notes}
+
+                {/* Price */}
+                <div style={{ textAlign: "right", minWidth: 100 }}>
+                  <div
+                    style={{
+                      fontWeight: 700,
+                      fontSize: 16,
+                      color: p.price ? "#0f172a" : "#94a3b8",
+                    }}
+                  >
+                    {formatPrice(p.price)}
+                  </div>
                 </div>
-                {p.sourceUrl && (
-                  <a href={p.sourceUrl} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 mt-2 text-xs text-blue-600 hover:text-blue-800 hover:underline font-medium">
-                    View Listing Source &rarr;
-                  </a>
-                )}
-                <DDChecklist docs={p.docs} />
-                <FinancialSummary f={p.financials} price={p.price} />
+
+                {/* Units / SF */}
+                <div style={{ textAlign: "right", minWidth: 80 }}>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "#334155",
+                    }}
+                  >
+                    {p.units ? `${p.units} units` : "â"}
+                  </div>
+                  <div style={{ fontSize: 12, color: "#94a3b8" }}>
+                    {formatSqft(p.sqft)}
+                  </div>
+                </div>
+
+                {/* Cap Rate */}
+                <div style={{ textAlign: "right", minWidth: 70 }}>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: p.capRate ? "#059669" : "#94a3b8",
+                    }}
+                  >
+                    {p.capRate ? `${p.capRate}%` : "â"}
+                  </div>
+                  <div style={{ fontSize: 11, color: "#94a3b8" }}>
+                    Cap Rate
+                  </div>
+                </div>
+
+                {/* DD Status Dropdown */}
+                <div onClick={(e) => e.stopPropagation()}>
+                  <select
+                    value={ddStatuses[p.id]}
+                    onChange={(e) =>
+                      setDdStatuses((prev) => ({
+                        ...prev,
+                        [p.id]: e.target.value,
+                      }))
+                    }
+                    style={{
+                      padding: "4px 8px",
+                      borderRadius: 6,
+                      border: "1px solid #e2e8f0",
+                      fontSize: 12,
+                      fontWeight: 500,
+                      color: ddStatusColors[ddStatuses[p.id]] || "#64748b",
+                      background: "#f8fafc",
+                      cursor: "pointer",
+                      minWidth: 130,
+                    }}
+                  >
+                    {ddOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            )}
-          </div>
-        ))}
+
+              {/* Expanded Details */}
+              {expanded && (
+                <div
+                  style={{
+                    padding: "0 18px 16px 36px",
+                    borderTop: "1px solid #f1f5f9",
+                    paddingTop: 14,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: 12,
+                      fontSize: 13,
+                    }}
+                  >
+                    <div>
+                      <span style={{ color: "#94a3b8" }}>Operator:</span>{" "}
+                      <span style={{ color: "#334155" }}>
+                        {p.operator || "Unknown"}
+                      </span>
+                    </div>
+                    <div>
+                      <span style={{ color: "#94a3b8" }}>Occupancy:</span>{" "}
+                      <span style={{ color: "#334155" }}>
+                        {p.occupancy || "Unknown"}
+                      </span>
+                    </div>
+                    <div style={{ gridColumn: "1 / -1" }}>
+                      <span style={{ color: "#94a3b8" }}>Notes:</span>{" "}
+                      <span style={{ color: "#334155" }}>{p.notes}</span>
+                    </div>
+                    {p.sourceUrl && (
+                      <div style={{ gridColumn: "1 / -1" }}>
+                        <span style={{ color: "#94a3b8" }}>Listing:</span>{" "}
+                        <a
+                          href={p.sourceUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            color: "#3b82f6",
+                            textDecoration: "none",
+                          }}
+                        >
+                          View on {p.source} â
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Footer */}
-      <div className="mt-8 text-center text-xs text-gray-400 pb-6 space-y-1">
-        <p>Sources scanned: Crexi &middot; LoopNet &middot; CityFeet &middot; BizQuest &middot; HAR &middot; TXSSA &middot; Showcase</p>
-        <p>Houston Zone: Harris Co + Conroe/Willis/Cleveland/Navasota/Brenham + Spring/Tomball/Magnolia/New Caney/Humble/Porter</p>
-        <p>Dallas Zone: Dallas County + Mesquite + Balch Springs + DFW Suburbs</p>
-        <p>Criteria: Enclosed (AC or Non-AC) &middot; $1-4M &middot; 7-9yr Gross Revenue Payback &middot; Minimal Parking</p>
+      <div
+        style={{
+          marginTop: 32,
+          padding: "16px 0",
+          borderTop: "1px solid #e2e8f0",
+          fontSize: 12,
+          color: "#94a3b8",
+          textAlign: "center",
+        }}
+      >
+        Self-Storage Acquisition Scanner â Scan run {SCAN_DATE} â Platforms
+        searched: Crexi/LoopNet, CityFeet, BizQuest, HAR, TXSSA â Target: Houston + Dallas Zones â Enclosed, $1-4M
       </div>
     </div>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<StorageDashboard />);
+ReactDOM.render(React.createElement(StorageDashboard), document.getElementById('root'));
   </script>
 </body>
 </html>
